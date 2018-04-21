@@ -6,7 +6,7 @@
 diffeqpy is a package for solving differential equations in Python. It utilizes
 [DifferentialEquations.jl](http://docs.juliadiffeq.org/latest/) for its core routines
 to give high performance solving of many different types of differential equations,
-including
+including:
 
 - Discrete equations (function maps, discrete stochastic (Gillespie/Markov)
   simulations)
@@ -273,10 +273,6 @@ So `du[i,j]` is the amount of noise due to the `j`th Wiener process that's
 applied to `u[i]`. We solve the Lorenz system with correlated noise as follows:
 
 ```py
-import numba
-import numpy
-import diffeqpy
-de = diffeqpy.setup()
 def f(du,u,p,t):
   x, y, z = u
   sigma, rho, beta = p
@@ -317,6 +313,18 @@ plt.show()
 Here you can see that the warping effect of the noise correlations is quite visible!
 
 ## Differential-Algebraic Equation (DAE) Examples
+
+A differential-algebraic equation is defined by an implicit function
+`f(du,u,p,t)=0`. All of the controls are the same as the other examples, except
+here you define a function which returns the residuals for each part of the
+equation to define the DAE. The initial value `u0` and the initial derivative
+`du0` are required, though they do not necessarily have to satisfy `f` (known
+as inconsistent initial conditions). The methods will automatically find
+consistent initial conditions. In order for this to occur, `differential_vars`
+must be set. This vector states which of the variables are differential (have a
+derivative term), with `false` meaning that the variable is purely algebraic.
+
+This example shows how to solve the Robertson equation:
 
 ```py
 def f(du,u,p,t):
