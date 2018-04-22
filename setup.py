@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='diffeqpy',
-      version='0.1',
+      version='0.2',
       description='Solving Differential Equations in Python',
       long_description=readme(),
       classifiers=[
@@ -23,7 +23,9 @@ setup(name='diffeqpy',
       license='MIT',
       packages=['diffeqpy'],
       install_requires=['julia'],
-      test_suite='nose.collector',
-      tests_require=['nose']
       include_package_data=True,
       zip_safe=False)
+
+[pytest]
+python_files = test_*.py
+python_functions=test_*

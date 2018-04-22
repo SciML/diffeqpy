@@ -1,19 +1,21 @@
 import diffeqpy
 de = diffeqpy.setup()
-
-def f(u,p,t):
-    return -u
-
-u0 = 0.5
-tspan = (0., 1.)
-prob = de.ODEProblem(f, u0, tspan)
-sol = de.pysolve(prob)
-
 import numba
-numba_f = numba.jit(f)
 
-prob = de.ODEProblem(numba_f, u0, tspan)
-sol = de.pysolve(prob)
+def test_ode_sol():
+    def f(u,p,t):
+        return -u
+
+    u0 = 0.5
+    tspan = (0., 1.)
+    prob = de.ODEProblem(f, u0, tspan)
+    sol = de.pysolve(prob)
+    assert len(sol.t) < 10
+
+    numba_f = numba.jit(f)
+    prob = de.ODEProblem(numba_f, u0, tspan)
+    sol2 = de.pysolve(prob)
+    assert len(sol.t) == len(sol2.t)
 
 def f(u,p,t):
     x, y, z = u
