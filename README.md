@@ -1,5 +1,6 @@
 # diffeqpy
 
+[![Join the chat at https://gitter.im/JuliaDiffEq/Lobby](https://badges.gitter.im/JuliaDiffEq/Lobby.svg)](https://gitter.im/JuliaDiffEq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/JuliaDiffEq/diffeqpy.svg?branch=master)](https://travis-ci.org/JuliaDiffEq/diffeqpy)
 [![Build status](https://ci.appveyor.com/api/projects/status/4ybwcrgopv6wrno1?svg=true)](https://ci.appveyor.com/project/ChrisRackauckas/diffeqpy)
 
@@ -19,6 +20,9 @@ including:
 - Mixed discrete and continuous equations (Hybrid Equations, Jump Diffusions)
 
 directly in Python.
+
+If you have any questions, or just want to chat about solvers/using the package,
+please feel free to chat in the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge). For bug reports, feature requests, etc., please submit an issue. 
 
 ## Installation
 
