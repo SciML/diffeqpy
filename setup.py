@@ -21,11 +21,7 @@ setup(name='diffeqpy',
       author='Chris Rackauckas',
       author_email='contact@juliadiffeq.org',
       license='MIT',
-      packages=['diffeqpy'],
+      packages=['diffeqpy','diffeqpy.tests'],
       install_requires=['julia'],
       include_package_data=True,
       zip_safe=False)
-
-[pytest]
-python_files = test_*.py
-python_functions=test_*
