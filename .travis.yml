@@ -4,7 +4,7 @@ os:
   - osx
 python:
     - "2.7"
-    - "3.7"
+    - "3.6"
 notifications:
   email: false
 before_install:
