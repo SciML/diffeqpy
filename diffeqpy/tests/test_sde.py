@@ -1,3 +1,4 @@
+import numba
 import diffeqpy
 de = diffeqpy.setup()
 
