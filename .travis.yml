@@ -21,7 +21,6 @@ before_install:
 
   - rm -rf ~/Downloads/julia*
   - export PATH="$HOME/julia/bin:$PATH"
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export R_LD_LIBRARY_PATH="$(R RHOME)/lib:$HOME/julia/lib/julia"; fi
 
   - pip install --quiet tox-travis
 script:
