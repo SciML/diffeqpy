@@ -24,9 +24,7 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export R_LD_LIBRARY_PATH="$(R RHOME)/lib:$HOME/julia/lib/julia"; fi
 
   - julia -e 'Pkg.add("DiffEqPy")'
-  - julia -e 'using DiffEqPy'
 
-  - pip install pytest pytest-cov
-  - pip install julia
+  - pip install --quiet tox-travis
 script:
-  - py.test
+  - tox -- --cov diffeqpy
