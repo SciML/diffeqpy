@@ -371,3 +371,17 @@ Unit tests can be run by [`tox`](http://tox.readthedocs.io).
 tox                # test with Python 3.6 and 2.7
 tox -e py36        # test only with Python 3.6
 ```
+
+### Troubleshooting
+
+In case you encounter silent failure from `tox`, try running it with
+`-- -s` (e.g., `tox -e py36 -- -s`) where `-s` option (`--capture=no`,
+i.e., don't capture stdio) is passed to `py.test`.  It may show an
+error message `"error initializing LibGit2 module"`.  In this case,
+setting environment variable `SSL_CERT_FILE` may help; e.g., try:
+
+```sh
+SSL_CERT_FILE=PATH/TO/cert.pem tox -e py36
+```
+
+See also: [julia#18693](https://github.com/JuliaLang/julia/issues/18693).
