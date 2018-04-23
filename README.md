@@ -371,8 +371,3 @@ Unit tests can be run by [`tox`](http://tox.readthedocs.io).
 tox                # test with Python 3.6 and 2.7
 tox -e py36        # test only with Python 3.6
 ```
-
-**WARNING** `tox` isolates Python environment but not Julia
-environment.  In particular, you need to run `Pkg.free("PyCall")`
-and `Pkg.build("PyCall")` in Julia after running `tox` if you are
-using different Python interpreter in your default environment.
