@@ -27,6 +27,9 @@ install:
         "C:\projects\julia-binary.exe")
 # Run installer silently, output to C:\projects\julia
   - C:\projects\julia-binary.exe /S /D=C:\projects\julia
+  - set PATH=C:\projects\julia\bin;%PATH%
+
+# Install Python packages
   - pip install --quiet tox-travis
 
 build_script:
