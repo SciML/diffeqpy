@@ -372,7 +372,16 @@ tox                # test with Python 3.6 and 2.7
 tox -e py36        # test only with Python 3.6
 ```
 
-**WARNING** `tox` isolates Python environment but not Julia
-environment.  In particular, you need to run `Pkg.free("PyCall")`
-and `Pkg.build("PyCall")` in Julia after running `tox` if you are
-using different Python interpreter in your default environment.
+### Troubleshooting
+
+In case you encounter silent failure from `tox`, try running it with
+`-- -s` (e.g., `tox -e py36 -- -s`) where `-s` option (`--capture=no`,
+i.e., don't capture stdio) is passed to `py.test`.  It may show an
+error message `"error initializing LibGit2 module"`.  In this case,
+setting environment variable `SSL_CERT_FILE` may help; e.g., try:
+
+```sh
+SSL_CERT_FILE=PATH/TO/cert.pem tox -e py36
+```
+
+See also: [julia#18693](https://github.com/JuliaLang/julia/issues/18693).
