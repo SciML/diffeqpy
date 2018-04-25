@@ -32,6 +32,9 @@ install:
 # Install Python packages
   - pip install --quiet tox-travis
 
+build_script:
+  # Empty so that it doesn't think it needs Visual Studio?
+
 test_script:
   - tox -- --cov diffeqpy
 
