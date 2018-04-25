@@ -129,7 +129,7 @@ sol = de.pysolve(prob,de.Vern9(),saveat=0.1,abstol=1e-10,reltol=1e-10)
 The set of algorithms for ODEs is described
 [at the ODE solvers page](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html).
 
-### Compilation with Numba
+### Compilation with Numba and Julia
 
 When solving a differential equation, it's pertinent that your derivative
 function `f` is fast since it occurs in the inner loop of the solver. We can
@@ -141,6 +141,16 @@ import numba
 numba_f = numba.jit(f)
 
 prob = de.ODEProblem(numba_f, u0, tspan)
+sol = de.pysolve(prob)
+```
+
+Additionally, you can directly define the functions in Julia. This will allow
+for more specialization and could be helpful to increase the efficiency over
+the Numba version for repeat or long calls. This is done via `de.eval`:
+
+```py
+jul_f = de.eval("(u,p,t)->-u") # Define the anonymous function in Julia
+prob = de.ODEProblem(jul_f, u0, tspan)
 sol = de.pysolve(prob)
 ```
 
@@ -200,6 +210,24 @@ u0 = [1.0,0.0,0.0]
 tspan = (0., 100.)
 p = [10.0,28.0,2.66]
 prob = de.ODEProblem(numba_f, u0, tspan, p)
+sol = de.pysolve(prob)
+```
+
+or using a Julia function:
+
+```py
+jul_f = de.eval("""
+function f(du,u,p,t)
+  x, y, z = u
+  sigma, rho, beta = p
+  du[1] = sigma * (y - x)
+  du[2] = x * (rho - z) - y
+  du[3] = x * y - beta * z
+end""")
+u0 = [1.0,0.0,0.0]
+tspan = (0., 100.)
+p = [10.0,28.0,2.66]
+prob = de.ODEProblem(jul_f, u0, tspan, p)
 sol = de.pysolve(prob)
 ```
 
@@ -362,6 +390,54 @@ numba_f = numba.jit(f)
 prob = de.DAEProblem(numba_f,du0,u0,tspan,differential_vars=differential_vars)
 sol = de.pysolve(prob)
 ```
+
+## Delay Differential Equations
+
+A delay differential equation is an ODE which allows the use of previous values.
+In this case, the function needs to be a JIT compiled Julia function. It looks
+just like the ODE, except in this case there is a function `h(p,t)` which allows
+you to interpolate and grab previous values.
+
+We must provide a history function `h(p,t)` that gives values for `u` before `t0`.
+Here we assume that the solution was constant before the initial time point.
+Additionally, we pass `constant_lags = [20.0]` to tell the solver that only
+constant-time lags were used and what the lag length was. This helps improve
+the solver accuracy by accurately stepping at the points of discontinuity.
+Together this is:
+
+```py
+f = de.eval("""
+function f(du, u, h, p, t)
+  du[1] = 1.1/(1 + sqrt(10)*(h(p, t-20)[1])^(5/4)) - 10*u[1]/(1 + 40*u[2])
+  du[2] = 100*u[1]/(1 + 40*u[2]) - 2.43*u[2]
+end""")
+u0 = [1.05767027/3, 1.030713491/3]
+
+h = de.eval("""
+function h(p,t)
+  [1.05767027/3, 1.030713491/3]
+end
+""")
+
+tspan = (0.0, 100.0)
+constant_lags = [20.0]
+prob = de.DDEProblem(f,u0,h,tspan,constant_lags=constant_lags)
+sol = de.pysolve(prob,saveat=0.1)
+
+u1 = [sol.u[i][0] for i in range(0,len(sol.u))]
+u2 = [sol.u[i][1] for i in range(0,len(sol.u))]
+
+import matplotlib.pyplot as plt
+plt.plot(sol.t,u1)
+plt.plot(sol.t,u2)
+plt.show()
+```
+
+![dde](https://user-images.githubusercontent.com/1814174/39229670-815f2eba-4818-11e8-9ba3-a4f61cc845c5.png)
+
+Notice that the solver accurately is able to simulate the kink (discontinuity)
+at `t=20` due to the discontinuity of the derivative at the initial time point!
+This is why declaring discontinuities can enhance the solver accuracy.
 
 ## Testing
 
