@@ -42,6 +42,8 @@ Then open up Julia and run the commands:
 
 ```julia
 Pkg.add("DiffEqPy")
+Pkg.checkout("PyCall") # https://github.com/JuliaPy/PyCall.jl/issues/496
+using DiffEqPy # Precompile the libraries
 ```
 
 and you're good! In addition, to improve the performance of your code it is
