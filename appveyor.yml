@@ -7,9 +7,9 @@ environment:
     # The list here is complete (excluding Python 2.6, which
     # isn't covered by this document) at the time of writing.
 
-    - PYTHON: "C:\\Python27-x64"
+    - TOXENV: py27
       JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/0.6/julia-0.6-latest-win64.exe"
-    - PYTHON: "C:\\Python36-x64"
+    - TOXENV: py36
       JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/0.6/julia-0.6-latest-win64.exe"
 
 notifications:
@@ -30,14 +30,14 @@ install:
   - set PATH=C:\projects\julia\bin;%PATH%
 
 # Install Python packages
-  - pip install --quiet tox-travis
+  - C:\Python36-x64\python -m pip install --quiet tox
 
 build_script:
   # Empty so that it doesn't think it needs Visual Studio?
   - echo 'test'
 
 test_script:
-  - tox -- --cov diffeqpy
+  - C:\Python36-x64\scripts\tox -- --cov diffeqpy
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
