@@ -1,8 +1,11 @@
 import diffeqpy
-de = diffeqpy.setup()
-import numba
+import pytest
+numba = pytest.importorskip('numba')
+
 
 def test_ode_sol():
+    de = diffeqpy.setup()
+
     def f(u,p,t):
         return -u
 
@@ -17,7 +20,10 @@ def test_ode_sol():
     sol2 = de.pysolve(prob)
     assert len(sol.t) == len(sol2.t)
 
+
 def test_lorenz_sol():
+    de = diffeqpy.setup()
+
     def f(u,p,t):
         x, y, z = u
         sigma, rho, beta = p
