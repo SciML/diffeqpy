@@ -1,5 +1,6 @@
-import numba
 import diffeqpy
+import pytest
+numba = pytest.importorskip('numba')
 
 
 def test():

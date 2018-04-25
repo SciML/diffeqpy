@@ -1,5 +1,6 @@
 import diffeqpy
-import numba
+import pytest
+numba = pytest.importorskip('numba')
 
 
 def test_ode_sol():
