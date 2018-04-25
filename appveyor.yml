@@ -33,8 +33,8 @@ install:
   - pip install --quiet tox-travis
 
 build_script:
-  - julia -e "pkg = :DiffEqPy; Pkg.add(string(pkg))"
-  - julia -e "Pkg.checkout("PyCall")"
+  - julia -e "Pkg.add(\"DiffEqPy\")"
+  - julia -e "Pkg.checkout(\"PyCall\")"
   - julia -e "using DiffEqPy"
 test_script:
   - tox -- --cov diffeqpy
