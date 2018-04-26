@@ -26,9 +26,6 @@ please feel free to chat in the [Gitter channel](https://gitter.im/JuliaDiffEq/L
 
 ## Installation
 
-#### Note: We aren't quite released yet. A few things need polish but if you checkout
-#### master on PyCall.jl it'll work as described in the README!
-
 To install diffeqpy, use pip:
 
 ```
