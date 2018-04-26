@@ -5,11 +5,11 @@ def readme():
         return f.read()
 
 setup(name='diffeqpy',
-      version='0.2',
+      version='0.3',
       description='Solving Differential Equations in Python',
       long_description=readme(),
       classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
