@@ -1,4 +1,4 @@
-function setup(; timeout=5.0 * 60, pollint=0.1)
+function setup(; timeout=9.0 * 60, pollint=0.1)
   timeout = Float64(timeout)
   pollint = Float64(pollint)
 
