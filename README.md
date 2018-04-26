@@ -42,7 +42,6 @@ Then open up Julia and run the commands:
 
 ```julia
 Pkg.add("DiffEqPy")
-Pkg.checkout("PyCall") # https://github.com/JuliaPy/PyCall.jl/issues/496
 using DiffEqPy # Precompile the libraries
 ```
 
@@ -443,12 +442,12 @@ This is why declaring discontinuities can enhance the solver accuracy.
 
 ## Known Limitations
 
-- Autodiff does not work on Python functions. When applicable, either define the derivative function 
+- Autodiff does not work on Python functions. When applicable, either define the derivative function
   as a Julia function or set the algorithm to use finite differencing, i.e. `Rodas5(autodiff=false)`.
   All default methods use autodiff.
 - Delay differential equations have to use Julia-defined functions otherwise the history function is
   not appropriately typed with the overloads.
-  
+
 ## Testing
 
 Unit tests can be run by [`tox`](http://tox.readthedocs.io).
