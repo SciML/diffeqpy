@@ -1,5 +1,9 @@
 environment:
 
+  TOXENV: py
+  TOX_TESTENV_PASSENV: DISTUTILS_USE_SDK MSSdk INCLUDE LIB
+  # https://packaging.python.org/guides/supporting-windows-using-appveyor/#testing-with-tox
+
   matrix:
 
     # For Python versions available on Appveyor, see
@@ -30,14 +34,14 @@ install:
   - set PATH=C:\projects\julia\bin;%PATH%
 
 # Install Python packages
-  - pip install --quiet tox-travis
+  - "%PYTHON%\\python.exe -m pip install --quiet tox"
 
 build_script:
   # Empty so that it doesn't think it needs Visual Studio?
   - echo 'test'
 
 test_script:
-  - tox -- --cov diffeqpy
+  - "%PYTHON%\\scripts\\tox -- --cov diffeqpy -sv -ra"
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
