@@ -441,6 +441,14 @@ Notice that the solver accurately is able to simulate the kink (discontinuity)
 at `t=20` due to the discontinuity of the derivative at the initial time point!
 This is why declaring discontinuities can enhance the solver accuracy.
 
+## Known Limitations
+
+- Autodiff does not work on Python functions. When applicable, either define the derivative function 
+  as a Julia function or set the algorithm to use finite differencing, i.e. `Rodas5(autodiff=false)`.
+  All default methods use autodiff.
+- Delay differential equations have to use Julia-defined functions otherwise the history function is
+  not appropriately typed with the overloads.
+  
 ## Testing
 
 Unit tests can be run by [`tox`](http://tox.readthedocs.io).
