@@ -41,7 +41,7 @@ build_script:
   - echo 'test'
 
 test_script:
-  - "%PYTHON%\\scripts\\tox -- --cov diffeqpy"
+  - "%PYTHON%\\scripts\\tox -- --cov diffeqpy -sv -ra"
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
