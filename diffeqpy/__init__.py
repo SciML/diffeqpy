@@ -1,16 +1,19 @@
 import os
+import subprocess
 
 from julia import Julia
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
 
+def include(jul, path):
+    include = jul.eval('include')  # jul.include does not work sometimes
+    return include(os.path.join(script_dir, path))
+
+
 def setup():
     jul = Julia()
-
-    # Load ./setup.jl
-    include = jul.eval('include')  # jul.include does not work sometimes
-    include(os.path.join(script_dir, 'setup.jl'))
+    include(jul, 'setup.jl')
 
     # Make Julia functions and types exported from
     # DifferentialEquations accessible:
@@ -21,3 +24,10 @@ def setup():
     jul.pysolve = jul.eval('pysolve')
 
     return jul
+
+
+def install():
+    """
+    Install Julia packages required for diffeqpy.
+    """
+    subprocess.check_call(['julia', os.path.join(script_dir, 'install.jl')])
