@@ -1,29 +1,25 @@
-import diffeqpy
+from .. import de
 import pytest
 numba = pytest.importorskip('numba')
 
 
 def test_ode_sol():
-    de = diffeqpy.setup()
-
     def f(u,p,t):
         return -u
 
     u0 = 0.5
     tspan = (0., 1.)
     prob = de.ODEProblem(f, u0, tspan)
-    sol = de.pysolve(prob)
+    sol = de.solve(prob)
     assert len(sol.t) < 10
 
     numba_f = numba.jit(f)
     prob = de.ODEProblem(numba_f, u0, tspan)
-    sol2 = de.pysolve(prob)
+    sol2 = de.solve(prob)
     assert len(sol.t) == len(sol2.t)
 
 
 def test_lorenz_sol():
-    de = diffeqpy.setup()
-
     def f(u,p,t):
         x, y, z = u
         sigma, rho, beta = p
@@ -33,7 +29,7 @@ def test_lorenz_sol():
     tspan = (0., 100.)
     p = [10.0,28.0,8/3]
     prob = de.ODEProblem(f, u0, tspan, p)
-    sol = de.pysolve(prob)
+    sol = de.solve(prob)
 
     def f(du,u,p,t):
         x, y, z = u
@@ -46,8 +42,8 @@ def test_lorenz_sol():
     tspan = (0., 100.)
     p = [10.0,28.0,2.66]
     prob = de.ODEProblem(f, u0, tspan, p)
-    sol = de.pysolve(prob)
+    sol = de.solve(prob)
 
     numba_f = numba.jit(f)
     prob = de.ODEProblem(numba_f, u0, tspan, p)
-    sol2 = de.pysolve(prob)
+    sol2 = de.solve(prob)
