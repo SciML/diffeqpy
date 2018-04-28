@@ -9,12 +9,12 @@ _jul = setup()
 # so that `api.show` points to `tuple` which does not print anything.
 # See: https://github.com/JuliaPy/pyjulia/issues/159
 #      https://github.com/JuliaDiffEq/diffeqpy/pull/24
+_show = _jul.api.show
 try:
-    show = _jul.api.show
     _jul.api.show = _jul._call('tuple')  # some "no-op" arity 2 function
     from julia.DifferentialEquations import *
 finally:
-    _jul.api.show = show
-del show
+    _jul.api.show = _show
+del _show
 
 solve = _jul.pysolve
