@@ -6,7 +6,7 @@ _jul = setup()
 #      https://github.com/JuliaDiffEq/diffeqpy/pull/24
 try:
     show = _jul.api.show
-    _jul.api.show = _jul._call('identity')
+    _jul.api.show = _jul._call('tuple')  # some "no-op" arity 2 function
     from julia.DifferentialEquations import *
 finally:
     _jul.api.show = show
