@@ -57,12 +57,11 @@ pip install numba
 Import and setup the solvers via the commands:
 
 ```py
-import diffeqpy
-de = diffeqpy.setup()
+from diffeqpy import de
 ```
 
 The general flow for using the package is to follow exactly as would be done
-in Julia, except add `de.` in front and use `pysolve` instead of `solve`.
+in Julia, except add `de.` in front.
 Most of the commands will work without any modification. Thus
 [the DifferentialEquations.jl documentation](https://github.com/JuliaDiffEq/DifferentialEquations.jl)
 and the [DiffEqTutorials](https://github.com/JuliaDiffEq/DiffEqTutorials.jl)
@@ -74,8 +73,7 @@ translate these docs to Python code.
 ### One-dimensional ODEs
 
 ```py
-import diffeqpy
-de = diffeqpy.setup()
+from diffeqpy import de
 
 def f(u,p,t):
     return -u
@@ -83,7 +81,7 @@ def f(u,p,t):
 u0 = 0.5
 tspan = (0., 1.)
 prob = de.ODEProblem(f, u0, tspan)
-sol = de.pysolve(prob)
+sol = de.solve(prob)
 ```
 
 The solution object is the same as the one described
@@ -123,7 +121,7 @@ save the solution at every `t=0.1`, and let's utilize the `Vern9()` 9th order
 Runge-Kutta method along with low tolerances `abstol=reltol=1e-10`:
 
 ```py
-sol = de.pysolve(prob,de.Vern9(),saveat=0.1,abstol=1e-10,reltol=1e-10)
+sol = de.solve(prob,de.Vern9(),saveat=0.1,abstol=1e-10,reltol=1e-10)
 ```
 
 The set of algorithms for ODEs is described
@@ -141,7 +139,7 @@ import numba
 numba_f = numba.jit(f)
 
 prob = de.ODEProblem(numba_f, u0, tspan)
-sol = de.pysolve(prob)
+sol = de.solve(prob)
 ```
 
 Additionally, you can directly define the functions in Julia. This will allow
@@ -151,7 +149,7 @@ the Numba version for repeat or long calls. This is done via `de.eval`:
 ```py
 jul_f = de.eval("(u,p,t)->-u") # Define the anonymous function in Julia
 prob = de.ODEProblem(jul_f, u0, tspan)
-sol = de.pysolve(prob)
+sol = de.solve(prob)
 ```
 
 ### Systems of ODEs: Lorenz Equations
@@ -169,7 +167,7 @@ u0 = [1.0,0.0,0.0]
 tspan = (0., 100.)
 p = [10.0,28.0,8/3]
 prob = de.ODEProblem(f, u0, tspan, p)
-sol = de.pysolve(prob,saveat=0.01)
+sol = de.solve(prob,saveat=0.01)
 
 plt.plot(sol.t,sol.u)
 plt.show()
@@ -210,7 +208,7 @@ u0 = [1.0,0.0,0.0]
 tspan = (0., 100.)
 p = [10.0,28.0,2.66]
 prob = de.ODEProblem(numba_f, u0, tspan, p)
-sol = de.pysolve(prob)
+sol = de.solve(prob)
 ```
 
 or using a Julia function:
@@ -228,7 +226,7 @@ u0 = [1.0,0.0,0.0]
 tspan = (0., 100.)
 p = [10.0,28.0,2.66]
 prob = de.ODEProblem(jul_f, u0, tspan, p)
-sol = de.pysolve(prob)
+sol = de.solve(prob)
 ```
 
 ## Stochastic Differential Equation (SDE) Examples
@@ -249,7 +247,7 @@ def g(u,p,t):
 u0 = 0.5
 tspan = (0.0,1.0)
 prob = de.SDEProblem(f,g,u0,tspan)
-sol = de.pysolve(prob,reltol=1e-3,abstol=1e-3)
+sol = de.solve(prob,reltol=1e-3,abstol=1e-3)
 
 plt.plot(sol.t,sol.u)
 plt.show()
@@ -282,7 +280,7 @@ u0 = [1.0,0.0,0.0]
 tspan = (0., 100.)
 p = [10.0,28.0,2.66]
 prob = de.SDEProblem(numba_f, numba_g, u0, tspan, p)
-sol = de.pysolve(prob)
+sol = de.solve(prob)
 
 # Now let's draw a phase plot
 
@@ -331,7 +329,7 @@ nrp = numpy.zeros((3,2))
 numba_f = numba.jit(f)
 numba_g = numba.jit(g)
 prob = de.SDEProblem(numba_f,numba_g,u0,tspan,p,noise_rate_prototype=nrp)
-sol = de.pysolve(prob,saveat=0.005)
+sol = de.solve(prob,saveat=0.005)
 
 # Now let's draw a phase plot
 
@@ -373,7 +371,7 @@ du0 = [-0.04, 0.04, 0.0]
 tspan = (0.0,100000.0)
 differential_vars = [True,True,False]
 prob = de.DAEProblem(f,du0,u0,tspan,differential_vars=differential_vars)
-sol = de.pysolve(prob)
+sol = de.solve(prob)
 ```
 
 ![f8](https://user-images.githubusercontent.com/1814174/39089392-e932f012-457a-11e8-9979-c006bcfabf71.png)
@@ -388,7 +386,7 @@ def f(resid,du,u,p,t):
 
 numba_f = numba.jit(f)
 prob = de.DAEProblem(numba_f,du0,u0,tspan,differential_vars=differential_vars)
-sol = de.pysolve(prob)
+sol = de.solve(prob)
 ```
 
 ## Delay Differential Equations
@@ -422,7 +420,7 @@ end
 tspan = (0.0, 100.0)
 constant_lags = [20.0]
 prob = de.DDEProblem(f,u0,h,tspan,constant_lags=constant_lags)
-sol = de.pysolve(prob,saveat=0.1)
+sol = de.solve(prob,saveat=0.1)
 
 u1 = [sol.u[i][0] for i in range(0,len(sol.u))]
 u2 = [sol.u[i][1] for i in range(0,len(sol.u))]

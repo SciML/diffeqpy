@@ -1,11 +1,9 @@
-import diffeqpy
+from .. import de
 import pytest
 numba = pytest.importorskip('numba')
 
 
 def test():
-    de = diffeqpy.setup()
-
     def f(u,p,t):
         return 1.01*u
 
@@ -15,7 +13,7 @@ def test():
     u0 = 0.5
     tspan = (0.0,1.0)
     prob = de.SDEProblem(f,g,u0,tspan)
-    sol = de.pysolve(prob)
+    sol = de.solve(prob)
 
     def f(du,u,p,t):
         x, y, z = u
@@ -35,4 +33,4 @@ def test():
     tspan = (0., 100.)
     p = [10.0,28.0,2.66]
     prob = de.SDEProblem(numba_f, numba_g, u0, tspan, p)
-    sol = de.pysolve(prob)
+    sol = de.solve(prob)
