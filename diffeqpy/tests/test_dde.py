@@ -1,16 +1,23 @@
+from julia import Main
+
 from .. import de
 
 
 def test():
-    def f(du,u,p,t):
-        resid1 = - 0.04*u[0]               + 1e4*u[1]*u[2] - du[0]
-        resid2 = + 0.04*u[0] - 3e7*u[1]**2 - 1e4*u[1]*u[2] - du[1]
-        resid3 = u[0] + u[1] + u[2] - 1.0
-        return [resid1,resid2,resid3]
+    f = Main.eval("""
+    function f(du, u, h, p, t)
+      du[1] = 1.1/(1 + sqrt(10)*(h(p, t-20)[1])^(5/4)) - 10*u[1]/(1 + 40*u[2])
+      du[2] = 100*u[1]/(1 + 40*u[2]) - 2.43*u[2]
+    end""")
+    u0 = [1.05767027/3, 1.030713491/3]
 
-    u0 = [1.0, 0, 0]
-    du0 = [-0.04, 0.04, 0.0]
-    tspan = (0.0,100000.0)
-    differential_vars = [True,True,False]
-    prob = de.DAEProblem(f,du0,u0,tspan,differential_vars=differential_vars)
-    sol = de.solve(prob)
+    h = Main.eval("""
+    function h(p,t)
+      [1.05767027/3, 1.030713491/3]
+    end
+    """)
+
+    tspan = (0.0, 100.0)
+    constant_lags = [20.0]
+    prob = de.DDEProblem(f,u0,h,tspan,constant_lags=constant_lags)
+    sol = de.solve(prob,saveat=0.1)

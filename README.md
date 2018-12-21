@@ -144,10 +144,11 @@ sol = de.solve(prob)
 
 Additionally, you can directly define the functions in Julia. This will allow
 for more specialization and could be helpful to increase the efficiency over
-the Numba version for repeat or long calls. This is done via `de.eval`:
+the Numba version for repeat or long calls. This is done via `julia.Main.eval`:
 
 ```py
-jul_f = de.eval("(u,p,t)->-u") # Define the anonymous function in Julia
+from julia import Main
+jul_f = Main.eval("(u,p,t)->-u") # Define the anonymous function in Julia
 prob = de.ODEProblem(jul_f, u0, tspan)
 sol = de.solve(prob)
 ```
@@ -214,7 +215,7 @@ sol = de.solve(prob)
 or using a Julia function:
 
 ```py
-jul_f = de.eval("""
+jul_f = Main.eval("""
 function f(du,u,p,t)
   x, y, z = u
   sigma, rho, beta = p
@@ -366,7 +367,7 @@ def f(du,u,p,t):
   resid3 = u[0] + u[1] + u[2] - 1.0
   return [resid1,resid2,resid3]
 
-u0 = [1.0, 0, 0]
+u0 = [1.0, 0.0, 0.0]
 du0 = [-0.04, 0.04, 0.0]
 tspan = (0.0,100000.0)
 differential_vars = [True,True,False]
@@ -404,14 +405,14 @@ the solver accuracy by accurately stepping at the points of discontinuity.
 Together this is:
 
 ```py
-f = de.eval("""
+f = Main.eval("""
 function f(du, u, h, p, t)
   du[1] = 1.1/(1 + sqrt(10)*(h(p, t-20)[1])^(5/4)) - 10*u[1]/(1 + 40*u[2])
   du[2] = 100*u[1]/(1 + 40*u[2]) - 2.43*u[2]
 end""")
 u0 = [1.05767027/3, 1.030713491/3]
 
-h = de.eval("""
+h = Main.eval("""
 function h(p,t)
   [1.05767027/3, 1.030713491/3]
 end
