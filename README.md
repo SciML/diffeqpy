@@ -367,7 +367,7 @@ def f(du,u,p,t):
   resid3 = u[0] + u[1] + u[2] - 1.0
   return [resid1,resid2,resid3]
 
-u0 = [1.0, 0, 0]
+u0 = [1.0, 0.0, 0.0]
 du0 = [-0.04, 0.04, 0.0]
 tspan = (0.0,100000.0)
 differential_vars = [True,True,False]
