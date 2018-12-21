@@ -10,9 +10,9 @@ environment:
     # https://www.appveyor.com/docs/windows-images-software/#python
 
     - PYTHONDIR: "C:\\Python27-x64"
-      JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/1.0/julia-1.0.1-win64.exe"
+      JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/1.0/julia-1.0-latest-win64.exe"
     - PYTHONDIR: "C:\\Python36-x64"
-      JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/1.0/julia-1.0.1-win64.exe"
+      JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/1.0/julia-1.0-latest-win64.exe"
 
 matrix:
   allow_failures:
