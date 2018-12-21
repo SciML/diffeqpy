@@ -43,7 +43,7 @@ build_script:
   - echo 'test'
 
 test_script:
-  - "SET PYTHON=%PYTHONDIR%\\python.exe"
+  - "SET PYTHON=%CD%\\.tox\\py\\scripts\\python.exe"
   - "%PYTHONDIR%\\scripts\\tox -- --cov diffeqpy"
 
 artifacts:
