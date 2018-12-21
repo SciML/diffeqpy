@@ -8,6 +8,8 @@ using DifferentialEquations
 using PyCall
 
 if lowercase(get(ENV, "CI", "false")) == "true"
+    @info("ENV",
+          PYTHON = get(ENV, "PYTHON", nothing))
     @info "PyCall/deps/build.log:"
     print(read(
         joinpath(dirname(dirname(pathof(PyCall))), "deps", "build.log"),
