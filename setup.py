@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='diffeqpy',
-      version='0.4',
+      version='1.0.0',
       description='Solving Differential Equations in Python',
       long_description=readme(),
       classifiers=[
@@ -18,7 +18,7 @@ setup(name='diffeqpy',
       ],
       url='http://github.com/JuliaDiffEq/diffeqpy',
       keywords='differential equations stochastic ordinary delay differential-algebraic dae ode sde dde',
-      author='Chris Rackauckas',
+      author='Chris Rackauckas and Takafumi Arakaki',
       author_email='contact@juliadiffeq.org',
       license='MIT',
       packages=['diffeqpy','diffeqpy.tests'],
