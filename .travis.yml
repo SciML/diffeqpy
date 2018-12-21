@@ -23,4 +23,12 @@ before_install:
 
   - pip install --quiet tox-travis
 script:
+
+  # Create an environment first so that we know what to use for $PYTHON:
+  - tox --notest
+
+  # PyCall requires to know the right Python executable to use:
+  - export PYTHON="$(echo $PWD/.tox/py*/bin/python)"
+  - echo "$PYTHON"
+
   - tox -- --cov diffeqpy
