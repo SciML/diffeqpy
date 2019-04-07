@@ -31,4 +31,4 @@ script:
   - export PYTHON="$(echo $PWD/.tox/py*/bin/python)"
   - echo "$PYTHON"
 
-  - tox -- --cov diffeqpy
+  - tox -- --cov diffeqpy -vs
