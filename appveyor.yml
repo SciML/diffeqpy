@@ -45,7 +45,7 @@ build_script:
 
 test_script:
   - "SET PYTHON=%PYTHONDIR%\\python.exe"
-  - "%PYTHONDIR%\\scripts\\tox -- --cov diffeqpy"
+  - "%PYTHONDIR%\\scripts\\tox -- --cov diffeqpy -vs"
 
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
