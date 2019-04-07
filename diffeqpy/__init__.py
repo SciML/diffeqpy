@@ -8,4 +8,6 @@ def install():
     """
     Install Julia packages required for diffeqpy.
     """
+    import julia
+    julia.install()  # install PyCall
     subprocess.check_call(['julia', os.path.join(script_dir, 'install.jl')])
