@@ -21,7 +21,7 @@ before_install:
   - rm -rf ~/Downloads/julia*
   - export PATH="$HOME/julia/bin:$PATH"
 
-  - pip install --quiet tox-travis
+  - pip install --quiet tox
 script:
 
   # Create an environment first so that we know what to use for $PYTHON:
@@ -32,3 +32,9 @@ script:
   - echo "$PYTHON"
 
   - tox -- --cov diffeqpy
+jobs:
+  include:
+    - env: TOXENV=py3-numba
+      python: "3.6"
+  allow_failures:
+    - env: TOXENV=py3-numba
