@@ -1,6 +1,5 @@
 environment:
 
-  TOXENV: py
   TOX_TESTENV_PASSENV: DISTUTILS_USE_SDK MSSdk INCLUDE LIB
   # https://packaging.python.org/guides/supporting-windows-using-appveyor/#testing-with-tox
 
@@ -11,8 +10,10 @@ environment:
 
     - PYTHONDIR: "C:\\Python27-x64"
       JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/1.0/julia-1.0-latest-win64.exe"
+      TOXENV: py
     - PYTHONDIR: "C:\\Python36-x64"
       JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/1.0/julia-1.0-latest-win64.exe"
+      TOXENV: py3-numba
 
 matrix:
   allow_failures:
