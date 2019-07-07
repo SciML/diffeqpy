@@ -5,9 +5,10 @@ def readme():
         return f.read()
 
 setup(name='diffeqpy',
-      version='1.0.0',
+      version='1.1.0',
       description='Solving Differential Equations in Python',
       long_description=readme(),
+      long_description_content_type="text/markdown",
       classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
