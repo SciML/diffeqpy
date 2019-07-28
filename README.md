@@ -105,7 +105,7 @@ We can utilize the interpolation to get a finer solution:
 
 ```py
 import numpy
-numpy.linspace(0,1,100)
+t = numpy.linspace(0,1,100)
 u = sol(t)
 plt.plot(t,u)
 plt.show()
