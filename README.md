@@ -5,7 +5,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/4ybwcrgopv6wrno1?svg=true)](https://ci.appveyor.com/project/ChrisRackauckas/diffeqpy)
 
 diffeqpy is a package for solving differential equations in Python. It utilizes
-[DifferentialEquations.jl](http://docs.juliadiffeq.org/latest/) for its core routines
+[DifferentialEquations.jl](http://docs.juliadiffeq.org/dev/) for its core routines
 to give high performance solving of many different types of differential equations,
 including:
 
@@ -85,8 +85,8 @@ sol = de.solve(prob)
 ```
 
 The solution object is the same as the one described
-[in the DiffEq tutorials](http://docs.juliadiffeq.org/latest/tutorials/ode_example.html#Step-3:-Analyzing-the-Solution-1)
-and in the [solution handling documentation](http://docs.juliadiffeq.org/latest/basics/solution.html)
+[in the DiffEq tutorials](http://docs.juliadiffeq.org/dev/tutorials/ode_example.html#Step-3:-Analyzing-the-Solution-1)
+and in the [solution handling documentation](http://docs.juliadiffeq.org/dev/basics/solution.html)
 (note: the array interface is missing). Thus for example the solution time points
 are saved in `sol.t` and the solution values are saved in `sol.u`. Additionally,
 the interpolation `sol(t)` gives a continuous solution.
@@ -115,7 +115,7 @@ plt.show()
 
 ### Solve commands
 
-The [common interface arguments](http://docs.juliadiffeq.org/latest/basics/common_solver_opts.html)
+The [common interface arguments](http://docs.juliadiffeq.org/dev/basics/common_solver_opts.html)
 can be used to control the solve command. For example, let's use `saveat` to
 save the solution at every `t=0.1`, and let's utilize the `Vern9()` 9th order
 Runge-Kutta method along with low tolerances `abstol=reltol=1e-10`:
@@ -125,7 +125,7 @@ sol = de.solve(prob,de.Vern9(),saveat=0.1,abstol=1e-10,reltol=1e-10)
 ```
 
 The set of algorithms for ODEs is described
-[at the ODE solvers page](http://docs.juliadiffeq.org/latest/solvers/ode_solve.html).
+[at the ODE solvers page](http://docs.juliadiffeq.org/dev/solvers/ode_solve.html).
 
 ### Compilation with Numba and Julia
 
@@ -236,7 +236,7 @@ sol = de.solve(prob)
 
 Solving one-dimensonal SDEs `du = f(u,t)dt + g(u,t)dW_t` is like an ODE except
 with an extra function for the diffusion (randomness or noise) term. The steps
-follow the [SDE tutorial](http://docs.juliadiffeq.org/latest/tutorials/sde_example.html).
+follow the [SDE tutorial](http://docs.juliadiffeq.org/dev/tutorials/sde_example.html).
 
 ```py
 def f(u,p,t):
@@ -299,7 +299,7 @@ plt.show()
 
 In many cases you may want to share noise terms across the system. This is
 known as non-diagonal noise. The
-[DifferentialEquations.jl SDE Tutorial](http://docs.juliadiffeq.org/latest/tutorials/sde_example.html#Example-4:-Systems-of-SDEs-with-Non-Diagonal-Noise-1)
+[DifferentialEquations.jl SDE Tutorial](http://docs.juliadiffeq.org/dev/tutorials/sde_example.html#Example-4:-Systems-of-SDEs-with-Non-Diagonal-Noise-1)
 explains how the matrix form of the diffusion term corresponds to the
 summation style of multiple Wiener processes. Essentially, the row corresponds
 to which system the term is applied to, and the column is which noise term.
