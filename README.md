@@ -153,6 +153,8 @@ prob = de.ODEProblem(jul_f, u0, tspan)
 sol = de.solve(prob)
 ```
 
+#### Note that when using Numba, one must avoid Python lists and pass state and parameters as NumPy arrays!
+
 ### Systems of ODEs: Lorenz Equations
 
 To solve systems of ODEs, simply use an array as your initial condition and
