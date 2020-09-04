@@ -68,6 +68,25 @@ and the [DiffEqTutorials](https://github.com/SciML/DiffEqTutorials.jl)
 are the main in-depth documentation for this package. Below we will show how to
 translate these docs to Python code.
 
+## Note about !
+
+Python does not allow `!` in function names, so this is also [a limitation of pyjulia](https://pyjulia.readthedocs.io/en/latest/limitations.html#mismatch-in-valid-set-of-identifiers)
+To use functions which on the Julia side have a `!`, like `step!`, replace `!` by `_b`, for example:
+
+```julia
+from diffeqpy import de
+def f(u,p,t):
+    return -u
+u0 = 0.5
+tspan = (0., 1.)
+prob = de.ODEProblem(f, u0, tspan)
+integrator = de.init(prob, de.Tsit5())
+de.step_b(integrator)
+```
+
+is valid Python code for using [the integrator interface](https://diffeq.sciml.ai/stable/basics/integrator/).
+
+
 ## Ordinary Differential Equation (ODE) Examples
 
 ### One-dimensional ODEs
