@@ -1,9 +1,10 @@
 from .. import de
 import pytest
-numba = pytest.importorskip('numba')
 
 
 def test_ode_sol():
+    numba = pytest.importorskip('numba')
+
     def f(u,p,t):
         return -u
 
@@ -20,6 +21,8 @@ def test_ode_sol():
 
 
 def test_lorenz_sol():
+    numba = pytest.importorskip('numba')
+
     def f(u,p,t):
         x, y, z = u
         sigma, rho, beta = p

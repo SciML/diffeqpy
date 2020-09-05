@@ -1,9 +1,10 @@
 from .. import de
 import pytest
-numba = pytest.importorskip('numba')
 
 
 def test():
+    numba = pytest.importorskip('numba')
+
     def f(u,p,t):
         return 1.01*u
 
