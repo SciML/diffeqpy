@@ -1,9 +1,10 @@
 from .. import de
 import pytest
-numba = pytest.importorskip('numba')
 
 
 def test_ode_sol():
+    numba = pytest.importorskip('numba')
+
     def f(u,p,t):
         return -u
 
@@ -20,6 +21,8 @@ def test_ode_sol():
 
 
 def test_lorenz_sol():
+    numba = pytest.importorskip('numba')
+
     def f(u,p,t):
         x, y, z = u
         sigma, rho, beta = p
@@ -47,3 +50,19 @@ def test_lorenz_sol():
     numba_f = numba.jit(f)
     prob = de.ODEProblem(numba_f, u0, tspan, p)
     sol2 = de.solve(prob)
+
+
+def test_issue73():
+    class potclass:
+        def __init__(self):
+            self.f_eval = 0
+        def get_negative_grad(self, u, p, t):
+            self.f_eval += 1
+            return -2*u
+
+    u0 = 0.5
+    pot = potclass()
+    tspan = (0, 1.0)
+    print(pot.get_negative_grad(1, 1, 1))
+    prob = de.ODEProblem(pot.get_negative_grad,u0, tspan)
+    de.init(prob, de.Tsit5())
