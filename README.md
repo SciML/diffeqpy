@@ -472,8 +472,8 @@ This is why declaring discontinuities can enhance the solver accuracy.
 Unit tests can be run by [`tox`](http://tox.readthedocs.io).
 
 ```sh
-tox                # test with Python 3.6 and 2.7
-tox -e py36        # test only with Python 3.6
+tox
+tox -e py3-numba   # test with Numba
 ```
 
 ### Troubleshooting
