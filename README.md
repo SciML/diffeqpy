@@ -1,8 +1,7 @@
 # diffeqpy
 
 [![Join the chat at https://gitter.im/JuliaDiffEq/Lobby](https://badges.gitter.im/JuliaDiffEq/Lobby.svg)](https://gitter.im/JuliaDiffEq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/SciML/diffeqpy.svg?branch=master)](https://travis-ci.org/SciML/diffeqpy)
-[![Build status](https://ci.appveyor.com/api/projects/status/4ybwcrgopv6wrno1?svg=true)](https://ci.appveyor.com/project/ChrisRackauckas/diffeqpy)
+[![CI](https://github.com/SciML/diffeqpy/workflows/CI/badge.svg)](https://github.com/SciML/diffeqpy/actions)
 
 diffeqpy is a package for solving differential equations in Python. It utilizes
 [DifferentialEquations.jl](http://diffeq.sciml.ai/dev/) for its core routines
