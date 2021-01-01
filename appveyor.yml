@@ -9,10 +9,8 @@ environment:
     # https://www.appveyor.com/docs/windows-images-software/#python
 
     - PYTHONDIR: "C:\\Python27-x64"
-      JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/1.0/julia-1.0-latest-win64.exe"
       TOXENV: py
     - PYTHONDIR: "C:\\Python36-x64"
-      JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/1.0/julia-1.0-latest-win64.exe"
       TOXENV: py3-numba
 
 matrix:
@@ -27,14 +25,6 @@ notifications:
 
 install:
   - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
-
-# Download most recent Julia Windows binary
-  - ps: (new-object net.webclient).DownloadFile(
-        $env:JULIA_URL,
-        "C:\projects\julia-binary.exe")
-# Run installer silently, output to C:\projects\julia
-  - C:\projects\julia-binary.exe /S /D=C:\projects\julia
-  - set PATH=C:\projects\julia\bin;%PATH%
 
 # Install Python packages
   - "%PYTHONDIR%\\python.exe -m pip install --quiet tox"
