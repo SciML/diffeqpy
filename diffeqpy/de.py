@@ -1,6 +1,13 @@
 import os
 import sys
 
+from jill.install import install_julia
+from jill.install import last_julia_version
+
+if last_julia_version() == None:
+  print("No Julia version found. Installing Julia.")
+  install_julia(confirm=True)
+
 from julia import Main
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
