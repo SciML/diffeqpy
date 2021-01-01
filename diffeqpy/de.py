@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 
 from jill.install import install_julia
 from jill.install import last_julia_version
