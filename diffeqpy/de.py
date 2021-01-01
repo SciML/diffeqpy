@@ -1,13 +1,8 @@
 import os
 import sys
-import shutil
 
 from jill.install import install_julia
-from jill.install import last_julia_version
-
-if shutil.which("julia") == None:
-  print("No Julia version found. Installing Julia.")
-  install_julia(confirm=True)
+install_julia(confirm=True)
 
 from julia import Main
 
