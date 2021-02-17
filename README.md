@@ -54,14 +54,17 @@ pip install numba
 
 ## General Flow
 
-Import and setup the solvers via the commands:
+Import and setup the solvers available in *DifferentialEquations.jl* via the commands:
 
 ```py
 from diffeqpy import de
 ```
-
+In case only the solvers available in *OrdinaryDiffEq.jl* are required then use the command:
+```py
+from diffeqpy import ode
+```
 The general flow for using the package is to follow exactly as would be done
-in Julia, except add `de.` in front.
+in Julia, except add `de.` or `ode.` in front. Note that `ode.` has lesser loading time and a smaller memory footprint compared to `de.`.
 Most of the commands will work without any modification. Thus
 [the DifferentialEquations.jl documentation](https://github.com/SciML/DifferentialEquations.jl)
 and the [DiffEqTutorials](https://github.com/SciML/DiffEqTutorials.jl)
