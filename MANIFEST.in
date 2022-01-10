@@ -1,4 +1,7 @@
 include README.md
 include LICENSE.md
 include docs/*.txt
+include diffeqpy/sys_image/*.jl
+include diffeqpy/sys_image/Project.toml
+include diffeqpy/Project.toml
 include diffeqpy/*.jl

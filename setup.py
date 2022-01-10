@@ -4,8 +4,14 @@ def readme():
     with open('README.md') as f:
         return f.read()
 
+
+version = {}
+with open("./diffeqpy/_version.py") as fp:
+    exec(fp.read(), version)
+
+
 setup(name='diffeqpy',
-      version='1.2.0',
+      version=version['__version__'],
       description='Solving Differential Equations in Python',
       long_description=readme(),
       long_description_content_type="text/markdown",
@@ -24,6 +30,7 @@ setup(name='diffeqpy',
       author_email='contact@juliadiffeq.org',
       license='MIT',
       packages=['diffeqpy','diffeqpy.tests'],
-      install_requires=['julia>=0.2', 'jill'],
+      install_requires=['julia>=0.2',
+                        'julia_project>=0.0.21'],
       include_package_data=True,
       zip_safe=False)
