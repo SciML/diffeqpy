@@ -18,7 +18,7 @@ jobs:
           - macos-latest
           - windows-latest
         architecture: [x64]
-        python-version: ['3.8']
+        python-version: ['3.10']
         julia-version: ['1']
       fail-fast: false
     name: Test ${{ matrix.os }} ${{ matrix.architecture }}
@@ -32,7 +32,7 @@ jobs:
           version: ${{ matrix.julia-version }}
           arch: ${{ matrix.architecture }}
       - name: Setup python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
