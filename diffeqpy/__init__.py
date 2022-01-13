@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import sys
 
 from jill.install import install_julia
 
@@ -25,7 +26,9 @@ def install(*, confirm=False):
             raise RuntimeError(
                 "Julia installed with jill but `julia` binary cannot be found in the path"
             )
-    subprocess.check_call([julia, os.path.join(script_dir, "install.jl")])
+    env = os.environ.copy()
+    env["PYTHON"] = sys.executable
+    subprocess.check_call([julia, os.path.join(script_dir, "install.jl")], env=env)
 
 
 def _ensure_installed(*kwargs):
