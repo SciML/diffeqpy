@@ -16,7 +16,9 @@ jobs:
         os:
           - ubuntu-latest
           - macos-latest
-          - windows-latest
+          # Disabling Windows tests as it's known to not work:
+          # https://github.com/SciML/diffeqpy/pull/86#issuecomment-1011675735
+          # - windows-latest
         architecture: [x64]
         python-version: ['3.10']
       fail-fast: false
