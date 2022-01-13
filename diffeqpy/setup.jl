@@ -1,4 +1,11 @@
-import DiffEqBase
+@debug "Importing DiffEqBase.jl...."
+try
+    import DiffEqBase
+catch err
+    @error "Failed to import DiffEqBase.jl" exception = (err, catch_backtrace())
+    rethrow()
+end
+
 import PyCall
 
 PyCall.PyObject(::typeof(DiffEqBase.solve)) =
@@ -16,4 +23,12 @@ function DiffEqBase.numargs(f::PyCall.PyObject)
     else
         return nargs
     end
+end
+
+@debug "Importing DifferentialEquationsjl...."
+try
+    import DifferentialEquations
+catch err
+    @error "Failed to import DifferentialEquations.jl" exception = (err, catch_backtrace())
+    rethrow()
 end

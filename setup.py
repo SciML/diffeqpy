@@ -24,6 +24,6 @@ setup(name='diffeqpy',
       author_email='contact@juliadiffeq.org',
       license='MIT',
       packages=['diffeqpy','diffeqpy.tests'],
-      install_requires=['julia>=0.2'],
+      install_requires=['julia>=0.2', 'jill'],
       include_package_data=True,
       zip_safe=False)
