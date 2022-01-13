@@ -34,7 +34,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade tox
       - name: Run test
-        run: python -m tox -- --cov=diffeqpy
+        run: python -m tox -- --cov=diffeqpy -s
         env:
           TOXENV: py
           JULIA_DEBUG: Main
