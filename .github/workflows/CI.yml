@@ -37,6 +37,7 @@ jobs:
         run: python -m tox -- --cov=diffeqpy
         env:
           TOXENV: py
+          JULIA_DEBUG: Main
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
