@@ -31,6 +31,6 @@ setup(name='diffeqpy',
       license='MIT',
       packages=['diffeqpy','diffeqpy.tests'],
       install_requires=['julia>=0.2',
-                        'julia_project>=0.0.23'],
+                        'julia_project>=0.0.24'],
       include_package_data=True,
       zip_safe=False)
