@@ -20,7 +20,7 @@ jobs:
           # https://github.com/SciML/diffeqpy/pull/86#issuecomment-1011675735
           # - windows-latest
         architecture: [x64]
-        python-version: ['3.10']
+        python-version: ['3.11']
       fail-fast: false
     name: Test ${{ matrix.os }} ${{ matrix.architecture }}
       Python ${{ matrix.python-version }}
