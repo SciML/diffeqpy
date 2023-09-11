@@ -53,7 +53,7 @@ pip install numba
 
 ## General Flow
 
-Import and setup the solvers available in *DifferentialEquations.jl* via the commands:
+Import and setup the solvers available in *DifferentialEquations.jl* via the command:
 
 ```py
 from diffeqpy import de
