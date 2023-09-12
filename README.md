@@ -164,12 +164,12 @@ sol = de.solve(prob)
 ```
 
 Additionally, you can directly define the functions in Julia. This will allow
-for more specialization and could be helpful to increase the efficiency over
-the Numba version for repeat or long calls. This is done via `julia.Main.eval`:
+for more specialization and could be helpful to increase the efficiency over the
+Numba version for repeat or long calls. This is done via `juliacall.Main.seval`:
 
 ```py
-from julia import Main
-jul_f = Main.eval("(u,p,t)->-u") # Define the anonymous function in Julia
+from juliacall import Main
+jul_f = Main.seval("(u,p,t)->-u") # Define the anonymous function in Julia
 prob = de.ODEProblem(jul_f, u0, tspan)
 sol = de.solve(prob)
 ```
