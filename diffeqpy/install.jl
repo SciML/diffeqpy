@@ -2,7 +2,7 @@ using Pkg
 Pkg.add("DifferentialEquations")
 Pkg.add("OrdinaryDiffEq")
 Pkg.add("DiffEqBase")
-Pkg.add("PyCall")
-Pkg.build("PyCall")
+Pkg.develop("PythonCall")
+Pkg.build("PythonCall")
 using DifferentialEquations
-using PyCall
+using PythonCall

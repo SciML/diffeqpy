@@ -24,6 +24,6 @@ setup(name='diffeqpy',
       author_email='contact@juliadiffeq.org',
       license='MIT',
       packages=['diffeqpy','diffeqpy.tests'],
-      install_requires=['julia>=0.2', 'jill'],
+      install_requires=['juliacall>=0.9.14', 'jill'], # TODO: specify looser compat bound for juliacall if safe.
       include_package_data=True,
       zip_safe=False)

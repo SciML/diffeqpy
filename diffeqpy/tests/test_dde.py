@@ -1,4 +1,4 @@
-from julia import Main
+from juliacall import Main
 
 from .. import de
 
