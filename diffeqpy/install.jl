@@ -1,8 +1,4 @@
 using Pkg
-Pkg.add("DifferentialEquations")
-Pkg.add("OrdinaryDiffEq")
-Pkg.add("DiffEqBase")
-Pkg.add("PyCall")
-Pkg.build("PyCall")
-using DifferentialEquations
-using PyCall
+Pkg.activate("diffeqpy", shared=true)
+Pkg.add(["DifferentialEquations", "OrdinaryDiffEq", "PythonCall"])
+using DifferentialEquations, OrdinaryDiffEq, PythonCall # Precompile
