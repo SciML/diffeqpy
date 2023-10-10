@@ -35,3 +35,12 @@ def _ensure_installed(*kwargs):
     if not _find_julia():
         # TODO: this should probably ensure that packages are installed too
         install(*kwargs)
+
+# TODO: upstream this function or an alternative into juliacall
+def load_julia_package(name):
+    # This is terrifying to many people. However, it seems SciML takes pragmatic approach.
+    _ensure_installed()
+
+    # Must be loaded after `_ensure_installed()`
+    from juliacall import Main
+    return Main.seval(f"using {name}: {name}; {name}")

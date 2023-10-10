@@ -1,11 +1,3 @@
-import os
 import sys
-
-from juliacall import Main
-
-# TODO: find a better way to do this or upstream this function into juliacall
-def load_julia_package(name):
-    return Main.seval(f"using {name}: {name}; {name}")
-
-OrdinaryDiffEq = load_julia_package("OrdinaryDiffEq")
-sys.modules[__name__] = OrdinaryDiffEq   # mutate myself
+from . import load_julia_package
+sys.modules[__name__] = load_julia_package("OrdinaryDiffEq") # mutate myself
