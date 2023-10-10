@@ -1,5 +1,3 @@
-from juliacall import Main
-
 from .. import de
 
 
