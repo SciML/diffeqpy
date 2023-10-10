@@ -167,11 +167,10 @@ sol = de.solve(prob)
 
 Additionally, you can directly define the functions in Julia. This will allow
 for more specialization and could be helpful to increase the efficiency over
-the Numba version for repeat or long calls. This is done via `julia.Main.eval`:
+the Numba version for repeat or long calls. This is done via `seval`:
 
 ```py
-from julia import Main
-jul_f = Main.eval("(u,p,t)->-u") # Define the anonymous function in Julia
+jul_f = de.seval("(u,p,t)->-u") # Define the anonymous function in Julia
 prob = de.ODEProblem(jul_f, u0, tspan)
 sol = de.solve(prob)
 ```
@@ -195,7 +194,7 @@ p = [10.0,28.0,8/3]
 prob = de.ODEProblem(f, u0, tspan, p)
 sol = de.solve(prob,saveat=0.01)
 
-plt.plot(sol.t,sol.u)
+plt.plot(sol.t,de.transpose(de.stack(sol.u)))
 plt.show()
 ```
 
@@ -204,11 +203,11 @@ plt.show()
 or we can draw the phase plot:
 
 ```py
-ut = numpy.transpose(sol.u)
+us = de.stack(sol.u)
 from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-ax.plot(ut[0,:],ut[1,:],ut[2,:])
+ax.plot(us[0,:],us[1,:],us[2,:])
 plt.show()
 ```
 
@@ -240,7 +239,7 @@ sol = de.solve(prob)
 or using a Julia function:
 
 ```py
-jul_f = Main.eval("""
+jul_f = de.seval("""
 function f(du,u,p,t)
   x, y, z = u
   sigma, rho, beta = p
@@ -275,7 +274,7 @@ tspan = (0.0,1.0)
 prob = de.SDEProblem(f,g,u0,tspan)
 sol = de.solve(prob,reltol=1e-3,abstol=1e-3)
 
-plt.plot(sol.t,sol.u)
+plt.plot(sol.t,de.stack(sol.u))
 plt.show()
 ```
 
@@ -430,14 +429,14 @@ the solver accuracy by accurately stepping at the points of discontinuity.
 Together this is:
 
 ```py
-f = Main.eval("""
+f = de.seval("""
 function f(du, u, h, p, t)
   du[1] = 1.1/(1 + sqrt(10)*(h(p, t-20)[1])^(5/4)) - 10*u[1]/(1 + 40*u[2])
   du[2] = 100*u[1]/(1 + 40*u[2]) - 2.43*u[2]
 end""")
 u0 = [1.05767027/3, 1.030713491/3]
 
-h = Main.eval("""
+h = de.seval("""
 function h(p,t)
   [1.05767027/3, 1.030713491/3]
 end
