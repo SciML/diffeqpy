@@ -1,3 +1,4 @@
 using Pkg
-Pkg.add(["DifferentialEquations", "OrdinaryDiffEq"])
-using DifferentialEquations, OrdinaryDiffEq # Precompile
+Pkg.activate("diffeqpy", shared=true)
+Pkg.add(["DifferentialEquations", "OrdinaryDiffEq", "PythonCall"])
+using DifferentialEquations, OrdinaryDiffEq, PythonCall # Precompile

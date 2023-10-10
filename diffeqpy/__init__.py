@@ -43,4 +43,4 @@ def load_julia_package(name):
 
     # Must be loaded after `_ensure_installed()`
     from juliacall import Main
-    return Main.seval(f"using {name}: {name}; {name}")
+    return Main.seval(f"import Pkg; Pkg.activate(\"diffeqpy\", shared=true); import {name}; {name}")
