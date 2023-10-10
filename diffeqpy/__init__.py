@@ -37,10 +37,10 @@ def _ensure_installed(*kwargs):
         install(*kwargs)
 
 # TODO: upstream this function or an alternative into juliacall
-def load_julia_package(name):
+def load_julia_packages(names):
     # This is terrifying to many people. However, it seems SciML takes pragmatic approach.
     _ensure_installed()
 
     # Must be loaded after `_ensure_installed()`
     from juliacall import Main
-    return Main.seval(f"import Pkg; Pkg.activate(\"diffeqpy\", shared=true); import {name}; {name}")
+    return Main.seval(f"import Pkg; Pkg.activate(\"diffeqpy\", shared=true); import {names}; {names}")
