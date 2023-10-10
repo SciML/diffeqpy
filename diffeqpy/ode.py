@@ -1,3 +1,3 @@
 import sys
-from . import load_julia_package
-sys.modules[__name__] = load_julia_package("OrdinaryDiffEq") # mutate myself
+from . import load_julia_packages
+sys.modules[__name__] = load_julia_packages("OrdinaryDiffEq") # mutate myself
