@@ -12,8 +12,7 @@ def test():
     h = de.seval("""
     function h(p,t)
       [1.05767027/3, 1.030713491/3]
-    end
-    """)
+    end""")
 
     tspan = (0.0, 100.0)
     constant_lags = [20.0]
