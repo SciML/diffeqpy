@@ -75,9 +75,7 @@ translate these docs to Python code.
 Python does not allow `!` in function names, so this is also [a limitation of pyjulia](https://pyjulia.readthedocs.io/en/latest/limitations.html#mismatch-in-valid-set-of-identifiers)
 To use functions which on the Julia side have a `!`, like `step!`, replace `!` by `_b`, for example:
 
-TODO:
-
-```julia
+```py
 from diffeqpy import de
 
 def f(u,p,t):
@@ -99,12 +97,11 @@ is valid Python code for using [the integrator interface](https://diffeq.sciml.a
 
 ```py
 from diffeqpy import de
-import numpy as np
 
-def f(du,u,p,t):
-    du[0] = -u[0]
+def f(u,p,t):
+    return -u
 
-u0 = np.array([0.5])
+u0 = 0.5
 tspan = (0., 1.)
 prob = de.ODEProblem(f, u0, tspan)
 sol = de.solve(prob)
@@ -121,7 +118,7 @@ We can plot the solution values using matplotlib:
 
 ```py
 import matplotlib.pyplot as plt
-plt.plot(sol.t,[u[0] for u in sol.u])
+plt.plot(sol.t,sol.u)
 plt.show()
 ```
 
@@ -133,7 +130,7 @@ We can utilize the interpolation to get a finer solution:
 import numpy
 t = numpy.linspace(0,1,100)
 u = sol(t)
-plt.plot(t,[ui[0] for ui in u])
+plt.plot(t,u)
 plt.show()
 ```
 
@@ -169,12 +166,13 @@ sol = de.solve(prob)
 ```
 
 Additionally, you can directly define the functions in Julia. This will allow
-for more specialization and could be helpful to increase the efficiency over the
-Numba version for repeat or long calls. This is done via `de.seval` or `ode.seval`:
+for more specialization and could be helpful to increase the efficiency over
+the Numba version for repeat or long calls. This is done via `julia.Main.eval`:
 
 ```py
-jul_f = de.seval("(u,p,t)->-u") # Define the anonymous function in Julia
-prob = de.ODEProblem(jul_f, u0[0], tspan)
+from julia import Main
+jul_f = Main.eval("(u,p,t)->-u") # Define the anonymous function in Julia
+prob = de.ODEProblem(jul_f, u0, tspan)
 sol = de.solve(prob)
 ```
 
@@ -186,21 +184,18 @@ To solve systems of ODEs, simply use an array as your initial condition and
 define `f` as an array function:
 
 ```py
-def f(du,u,p,t):
+def f(u,p,t):
     x, y, z = u
     sigma, rho, beta = p
-    du[0] = sigma * (y - x)
-    du[1] = x * (rho - z) - y
-    du[2] = x * y - beta * z
+    return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
 
-u0 = np.array([1.0,0.0,0.0])
+u0 = [1.0,0.0,0.0]
 tspan = (0., 100.)
-p = (10.0,28.0,8/3)
+p = [10.0,28.0,8/3]
 prob = de.ODEProblem(f, u0, tspan, p)
 sol = de.solve(prob,saveat=0.01)
-u = np.array([list(ui) for ui in sol.u])
 
-plt.plot(sol.t,u)
+plt.plot(sol.t,sol.u)
 plt.show()
 ```
 
@@ -209,7 +204,7 @@ plt.show()
 or we can draw the phase plot:
 
 ```py
-ut = numpy.transpose(u)
+ut = numpy.transpose(sol.u)
 from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -220,8 +215,6 @@ plt.show()
 ![f4](https://user-images.githubusercontent.com/1814174/39089388-e8dae00c-457a-11e8-879f-8b01e0b47178.png)
 
 ### In-Place Mutating Form
-
-TODO
 
 When dealing with systems of equations, in many cases it's helpful to reduce
 memory allocations by using mutating functions. In diffeqpy, the mutating
