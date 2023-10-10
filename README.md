@@ -162,7 +162,7 @@ import numba
 numba_f = numba.jit(f)
 
 prob = de.ODEProblem(numba_f, u0, tspan)
-sol = de.solve(prob)
+sol = de.solve(prob) # ERROR
 ```
 
 Additionally, you can directly define the functions in Julia. This will allow
@@ -309,11 +309,11 @@ sol = de.solve(prob)
 
 # Now let's draw a phase plot
 
-ut = numpy.transpose(sol.u)
+us = de.stack(sol.u)
 from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-ax.plot(ut[0,:],ut[1,:],ut[2,:])
+ax.plot(us[0,:],us[1,:],us[2,:])
 plt.show()
 ```
 
@@ -358,11 +358,11 @@ sol = de.solve(prob,saveat=0.005)
 
 # Now let's draw a phase plot
 
-ut = numpy.transpose(sol.u)
+us = de.stack(sol.u)
 from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-ax.plot(ut[0,:],ut[1,:],ut[2,:])
+ax.plot(us[0,:],us[1,:],us[2,:])
 plt.show()
 ```
 
@@ -411,7 +411,7 @@ def f(resid,du,u,p,t):
 
 numba_f = numba.jit(f)
 prob = de.DAEProblem(numba_f,du0,u0,tspan,differential_vars=differential_vars)
-sol = de.solve(prob)
+sol = de.solve(prob) # ERROR
 ```
 
 ## Delay Differential Equations
