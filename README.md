@@ -167,7 +167,12 @@ prob = de.ODEProblem(jul_f, u0, tspan)
 sol = de.solve(prob)
 ```
 
-#### Note that when using `de.jit`, certain undocumented restrictions apply!!
+#### Limitations
+
+`de.jit`, uses ModelingToolkit.jl's `modelingtoolkitize` internally and some
+restrictions apply. Not all models can be jitted. See the 
+[`modelingtoolkitize` documentation](https://docs.sciml.ai/ModelingToolkit/stable/tutorials/modelingtoolkitize/#What-is-modelingtoolkitize?)
+for more info.
 
 ### Systems of ODEs: Lorenz Equations
 
