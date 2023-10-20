@@ -31,11 +31,7 @@ To install diffeqpy, use pip:
 pip install diffeqpy
 ```
 
-Using diffeqpy requires that Julia is installed and in the path, along
-with DifferentialEquations.jl and PyCall.jl. To install Julia,
-download a generic binary from
-[the JuliaLang site](https://julialang.org/downloads/) and add it to your path.
-To install Julia packages required for diffeqpy, open up Python
+To install Julia packages required (and Julia if needed) for diffeqpy, open up Python
 interpreter then run:
 
 ```pycon
