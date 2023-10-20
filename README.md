@@ -456,6 +456,270 @@ Notice that the solver accurately is able to simulate the kink (discontinuity)
 at `t=20` due to the discontinuity of the derivative at the initial time point!
 This is why declaring discontinuities can enhance the solver accuracy.
 
+## GPU-Accelerated ODE Solving of Ensembles
+
+In many cases one is interested in solving the same ODE many times over many
+different initial conditions and parameters. In diffeqpy parlance this is called
+an ensemble solve. diffeqpy inherits the parallelism tools of the
+[SciML ecosystem](https://sciml.ai/) that are used for things like
+[automated equation discovery and acceleration](https://arxiv.org/abs/2001.04385).
+Here we will demonstrate using these parallel tools to accelerate the solving
+of an ensemble.
+
+First, let's define the JIT-accelerated Lorenz equation like before:
+
+```py
+from diffeqpy import de
+
+def f(u,p,t):
+    x, y, z = u
+    sigma, rho, beta = p
+    return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z]
+
+u0 = [1.0,0.0,0.0]
+tspan = (0., 100.)
+p = [10.0,28.0,8/3]
+prob = de.ODEProblem(f, u0, tspan, p)
+fast_prob = de.jit32(prob)
+sol = de.solve(fast_prob,saveat=0.01)
+```
+
+Note that here we used `de.jit32` to JIT-compile the problem into a `Float32` form in order to make it more
+efficient on most GPUs.
+
+Now we use the `EnsembleProblem` as defined on the
+[ensemble parallelism page of the documentation](https://diffeq.sciml.ai/stable/features/ensemble/):
+Let's build an ensemble by utilizing uniform random numbers to randomize the
+initial conditions and parameters:
+
+```py
+import random
+def prob_func(prob,i,rep):
+  de.remake(prob,u0=[random.uniform(0, 1)*u0[i] for i in range(0,3)],
+            p=[random.uniform(0, 1)*p[i] for i in range(0,3)])
+
+ensembleprob = de.EnsembleProblem(fast_prob, safetycopy=False)
+```
+
+Now we solve the ensemble in serial:
+
+```py
+sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleSerial(),trajectories=10000,saveat=0.01)
+```
+
+To add GPUs to the mix, we need to bring in [DiffEqGPU](https://github.com/SciML/DiffEqGPU.jl).
+The `cuda` submodule will install CUDA for you and bring all of the bindings into the returned object:
+
+```py
+from diffeqpy import cuda
+```
+
+#### Note: `from diffeqpy import cuda` can take awhile to run the first time as it installs the drivers!
+
+Now we simply use `EnsembleGPUKernel(cuda.CUDABackend())` with a
+GPU-specialized ODE solver `cuda.GPUTsit5()` to solve 10,000 ODEs on the GPU in 
+parallel:
+
+```py
+sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(CUDABackend()),trajectories=10000,saveat=0.01)
+```
+
+For the full list of choices for specialized GPU solvers, see 
+[the DiffEqGPU.jl documentation](https://docs.sciml.ai/DiffEqGPU/stable/manual/ensemblegpukernel/).
+
+Note that `EnsembleGPUArray` can be used as well, like:
+
+```py
+sol = de.solve(ensembleprob,de.Tsit5(),cuda.EnsembleGPUArray(CUDABackend()),trajectories=10000,saveat=0.01)
+```
+
+though we highly recommend the `EnsembleGPUKernel` methods for more speed. Given
+the way the JIT compilation performed will also ensure that the faster kernel
+generation methods work, `EnsembleGPUKernel` is almost certainly the
+better choice in most applications.
+
+### Benchmark
+
+To see how much of an effect the parallelism has, let's test this against R's
+deSolve package. This is exactly the same problem as the documentation example
+for deSolve, so let's copy that verbatim and then add a function to do the
+ensemble generation:
+
+```py
+import numpy as np
+from scipy.integrate import odeint
+ 
+def lorenz(state, t, sigma, beta, rho):
+    x, y, z = state
+     
+    dx = sigma * (y - x)
+    dy = x * (rho - z) - y
+    dz = x * y - beta * z
+     
+    return [dx, dy, dz]
+
+sigma = 10.0
+beta = 8.0 / 3.0
+rho = 28.0 
+p = (sigma, beta, rho)	
+y0 = [1.0, 1.0, 1.0]
+
+t = np.arange(0.0, 100.0, 0.01)
+result = odeint(lorenz, y0, t, p)
+```
+
+Using `lapply` to generate the ensemble we get:
+
+```py
+import timeit
+def time_func():
+    for itr in range(1, 1001):
+        result = odeint(lorenz, y0, t, p)
+
+timeit.Timer(time_func).timeit(number=1)
+
+# 38.08861699999761 seconds
+```
+
+Now let's see how the JIT-accelerated serial Julia version stacks up against that:
+
+```py
+def time_func():
+    sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleSerial(),trajectories=1000,saveat=0.01)
+
+timeit.Timer(time_func).timeit(number=1)
+
+# 3.1903300999983912
+```
+
+Julia is already about 12x faster than the pure Python solvers here! Now let's add
+GPU-acceleration to the mix:
+
+```py
+def time_func():
+    sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(CUDABackend()),trajectories=1000,saveat=0.01)
+
+timeit.Timer(time_func).timeit(number=1)
+
+# 0.013322799997695256
+```
+
+Already 2900x faster than SciPy! But the GPU acceleration is made for massively
+parallel problems, so let's up the trajectories a bit. We will not use more
+trajectories from R because that would take too much computing power, so let's
+see what happens to the Julia serial and GPU at 10,000 trajectories:
+
+```py
+def time_func():
+    sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleSerial(),trajectories=10000,saveat=0.01)
+
+timeit.Timer(time_func).timeit(number=1)
+
+# 68.80795999999827
+```
+
+```py
+def time_func():
+    sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(CUDABackend()),trajectories=10000,saveat=0.01)
+
+timeit.Timer(time_func).timeit(number=1)
+
+# 0.10774460000175168
+```
+
+To compare this to the pure Julia code:
+
+```julia
+using OrdinaryDiffEq, DiffEqGPU, CUDA, StaticArrays
+function lorenz(u, p, t)
+    σ = p[1]
+    ρ = p[2]
+    β = p[3]
+    du1 = σ * (u[2] - u[1])
+    du2 = u[1] * (ρ - u[3]) - u[2]
+    du3 = u[1] * u[2] - β * u[3]
+    return SVector{3}(du1, du2, du3)
+end
+
+u0 = SA[1.0f0; 0.0f0; 0.0f0]
+tspan = (0.0f0, 10.0f0)
+p = SA[10.0f0, 28.0f0, 8 / 3.0f0]
+prob = ODEProblem{false}(lorenz, u0, tspan, p)
+prob_func = (prob, i, repeat) -> remake(prob, p = (@SVector rand(Float32, 3)) .* p)
+monteprob = EnsembleProblem(prob, prob_func = prob_func, safetycopy = false)
+@time sol = solve(monteprob, GPUTsit5(), EnsembleGPUKernel(CUDA.CUDABackend()),
+    trajectories = 10_000,
+    saveat = 0.01);
+
+# 0.014481 seconds (257.64 k allocations: 13.130 MiB)
+```
+
+which is about an order of magnitude faster for computing 10,000 trajectories,
+note that the major factors are that we cannot define 32-bit floating point values
+from Python and the `prob_func` for generating the initial conditions and parameters
+is a major bottleneck since this function is written in Python.
+
+To see how this scales in Julia, let's take it to insane heights. First, let's
+reduce the amount we're saving:
+
+```julia
+@time sol = solve(monteprob,GPUTsit5(),EnsembleGPUKernel(CUDA.CUDABackend()),trajectories=10_000,saveat=1.0f0)
+0.015040 seconds (257.64 k allocations: 13.130 MiB)
+```
+
+This highlights that controlling memory pressure is key with GPU usage: you will
+get much better performance when requiring less saved points on the GPU.
+
+```julia
+@time sol = solve(monteprob,GPUTsit5(),EnsembleGPUKernel(CUDA.CUDABackend()),trajectories=100_000,saveat=1.0f0)
+# 0.150901 seconds (2.60 M allocations: 131.576 MiB)
+```
+
+compared to serial:
+
+```julia
+@time sol = solve(monteprob,Tsit5(),EnsembleSerial(),trajectories=100_000,saveat=1.0f0)
+# 22.136743 seconds (16.40 M allocations: 1.628 GiB, 42.98% gc time)
+```
+
+And now we start to see that scaling power! Let's solve 1 million trajectories:
+
+```julia
+@time sol = solve(monteprob,GPUTsit5(),EnsembleGPUKernel(CUDA.CUDABackend()),trajectories=1_000_000,saveat=1.0f0)
+# 1.031295 seconds (3.40 M allocations: 241.075 MiB)
+```
+
+For reference, let's look at deSolve with the change to only save that much:
+
+```py
+t = np.arange(0.0, 100.0, 1.0)
+def time_func():
+    for itr in range(1, 1001):
+        result = odeint(lorenz, y0, t, p)
+
+timeit.Timer(time_func).timeit(number=1)
+
+# 37.42609280000033
+```
+
+The GPU version is solving 1000x as many trajectories, 37x as fast! So conclusion,
+if you need the most speed, you may want to move to the Julia version to get the
+most out of your GPU due to Float32's, and when using GPUs make sure it's a problem
+with a relatively average or low memory pressure, and these methods will give
+orders of magnitude acceleration compared to what you might be used to.
+
+## GPU Backend Choices
+
+Just like DiffEqGPU.jl, diffeqpy supports many different GPU venders. `from diffeqpy import cuda`
+is just for cuda, but the following others are supported:
+
+- `from diffeqpy import cuda` with `cuda.CUDABackend` for NVIDIA GPUs via CUDA
+- `from diffeqpy import amdgpu` with `amdgpu.AMDGPUBackend` for AMD GPUs
+- `from diffeqpy import oneapi` with `oneapi.oneAPIBackend` for Intel's oneAPI GPUs
+- `from diffeqpy import metal` with `metal.MetalBackend` for Apple's Metal GPUs (on M-series processors)
+
+For more information, see [the DiffEqGPU.jl documentation](https://docs.sciml.ai/DiffEqGPU/stable/manual/backends/).
+
 ## Known Limitations
 
 - Autodiff does not work on Python functions. When applicable, either define the derivative function
