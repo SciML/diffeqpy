@@ -404,6 +404,49 @@ jit_prob = de.jit(prob) # Error: no method matching matching modelingtoolkitize(
 sol = de.solve(jit_prob)
 ```
 
+## Mass Matrices, Sparse Arrays, and More
+
+Mass matrix DAEs, along with many other forms, can be handled by doing an explicit conversion to the Julia types.
+See [the PythonCall module's documentation for more details](https://juliapy.github.io/PythonCall.jl/stable/juliacall/).
+
+As an example, let's convert [the mass matrix ODE tutorial in diffeqpy](https://docs.sciml.ai/DiffEqDocs/stable/tutorials/dae_example/).
+To do this, the one aspect we need to handle is the conversion of the mass matrix in to a Julia array object. This is done as follows:
+
+```py
+from diffeqpy import de
+from juliacall import Main as jl
+import numpy as np
+
+def rober(du, u, p, t):
+    y1, y2, y3 = u
+    k1, k2, k3 = p
+    du[0] = -k1 * y1 + k3 * y2 * y3
+    du[1] = k1 * y1 - k3 * y2 * y3 - k2 * y2**2
+    du[2] = y1 + y2 + y3 - 1
+    return
+
+M = np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,0.0]])
+f = de.ODEFunction(rober, mass_matrix = jl.convert(jl.Array,M))
+prob_mm = de.ODEProblem(f, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
+sol = de.solve(prob_mm, de.Rodas5P(), reltol = 1e-8, abstol = 1e-8)
+```
+
+Notice the only addition is to create the `np.array` object and to perform the manual conversion via `jl.convert(jl.Array,M)` to receive the
+Julia `Array` object. This can be done in any case where diffeqpy is not adequately auto-converting to the right Julia type. In some cases this
+can be used to improve performance, though here we do it simply for compatability.
+
+Similarly, sparse matrices can be passed in much the same way. For example:
+
+```py
+import scipy
+spM = scipy.sparse.csr_array(M)
+jl.seval("using SparseArrays")
+
+f = de.ODEFunction(rober, mass_matrix = jl.convert(jl.SparseMatrixCSC,M))
+prob_mm = de.ODEProblem(f, [1.0, 0.0, 0.0], (0.0, 1e5), (0.04, 3e7, 1e4))
+sol = de.solve(prob_mm, de.Rodas5P(), reltol = 1e-8, abstol = 1e-8)
+```
+
 ## Delay Differential Equations
 
 A delay differential equation is an ODE which allows the use of previous values.
