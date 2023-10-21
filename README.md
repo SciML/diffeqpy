@@ -41,6 +41,10 @@ interpreter then run:
 
 and you're good!
 
+## Collab Notebook Examples
+
+- [Solving the Lorenz equation faster than SciPy+Numba](https://colab.research.google.com/drive/1SQCu1puMQO01i3oMg0TXfa1uf7BqgsEW?usp=sharing)
+
 ## General Flow
 
 Import and setup the solvers available in *DifferentialEquations.jl* via the command:
