@@ -551,13 +551,19 @@ sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleSerial(),trajectories=10000,sa
 ```
 
 To add GPUs to the mix, we need to bring in [DiffEqGPU](https://github.com/SciML/DiffEqGPU.jl).
-The `cuda` submodule will install CUDA for you and bring all of the bindings into the returned object:
+The `diffeqpy.install_cuda()` will install CUDA for you and bring all of the bindings into the returned object:
+
+```py
+diffeqpy.install_cuda()
+```
+
+then run the cuda import:
 
 ```py
 from diffeqpy import cuda
 ```
 
-#### Note: `from diffeqpy import cuda` can take awhile to run the first time as it installs the drivers!
+#### Note: `diffeqpy.install_cuda()` and `from diffeqpy import cuda` can take awhile to run the first time as it installs the drivers!
 
 Now we simply use `EnsembleGPUKernel(cuda.CUDABackend())` with a
 GPU-specialized ODE solver `cuda.GPUTsit5()` to solve 10,000 ODEs on the GPU in 
