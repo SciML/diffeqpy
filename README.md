@@ -44,6 +44,7 @@ and you're good!
 ## Collab Notebook Examples
 
 - [Solving the Lorenz equation faster than SciPy+Numba](https://colab.research.google.com/drive/1SQCu1puMQO01i3oMg0TXfa1uf7BqgsEW?usp=sharing)
+- [Solving ODEs on GPUs Fast in Python with diffeqpy](https://colab.research.google.com/drive/1bnQMdNvg0AL-LyPcXBiH10jBij5QUmtY?usp=sharing)
 
 ## General Flow
 
