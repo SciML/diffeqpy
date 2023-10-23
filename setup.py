@@ -5,7 +5,7 @@ def readme():
         return f.read()
 
 setup(name='diffeqpy',
-      version='2.2.0',
+      version='2.3.0',
       description='Solving Differential Equations in Python',
       long_description=readme(),
       long_description_content_type="text/markdown",
