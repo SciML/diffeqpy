@@ -564,7 +564,7 @@ GPU-specialized ODE solver `cuda.GPUTsit5()` to solve 10,000 ODEs on the GPU in
 parallel:
 
 ```py
-sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(CUDABackend()),trajectories=10000,saveat=0.01)
+sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(cuda.CUDABackend()),trajectories=10000,saveat=0.01)
 ```
 
 For the full list of choices for specialized GPU solvers, see 
@@ -573,7 +573,7 @@ For the full list of choices for specialized GPU solvers, see
 Note that `EnsembleGPUArray` can be used as well, like:
 
 ```py
-sol = de.solve(ensembleprob,de.Tsit5(),cuda.EnsembleGPUArray(CUDABackend()),trajectories=10000,saveat=0.01)
+sol = de.solve(ensembleprob,de.Tsit5(),cuda.EnsembleGPUArray(cuda.CUDABackend()),trajectories=10000,saveat=0.01)
 ```
 
 though we highly recommend the `EnsembleGPUKernel` methods for more speed. Given
@@ -640,7 +640,7 @@ GPU-acceleration to the mix:
 
 ```py
 def time_func():
-    sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(CUDABackend()),trajectories=1000,saveat=0.01)
+    sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(cuda.CUDABackend()),trajectories=1000,saveat=0.01)
 
 timeit.Timer(time_func).timeit(number=1)
 
@@ -663,7 +663,7 @@ timeit.Timer(time_func).timeit(number=1)
 
 ```py
 def time_func():
-    sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(CUDABackend()),trajectories=10000,saveat=0.01)
+    sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(cuda.CUDABackend()),trajectories=10000,saveat=0.01)
 
 timeit.Timer(time_func).timeit(number=1)
 
