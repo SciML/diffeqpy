@@ -30,6 +30,45 @@ def install(*, confirm=False):
     env["PYTHON"] = sys.executable
     subprocess.check_call([julia, os.path.join(script_dir, "install.jl")], env=env)
 
+def install_cuda():
+    julia = _find_julia()
+    if not julia:
+        raise RuntimeError(
+            "Julia must be installed before adding CUDA. Please run `diffeqpy.install()` first"
+        )
+    env = os.environ.copy()
+    env["PYTHON"] = sys.executable
+    subprocess.check_call([julia, os.path.join(script_dir, "install_cuda.jl")], env=env)
+
+def install_amdgpu():
+    julia = _find_julia()
+    if not julia:
+        raise RuntimeError(
+            "Julia must be installed before adding AMDGPU. Please run `diffeqpy.install()` first"
+        )
+    env = os.environ.copy()
+    env["PYTHON"] = sys.executable
+    subprocess.check_call([julia, os.path.join(script_dir, "install_amdgpu.jl")], env=env)
+
+def install_metal():
+    julia = _find_julia()
+    if not julia:
+        raise RuntimeError(
+            "Julia must be installed before adding Metal. Please run `diffeqpy.install()` first"
+        )
+    env = os.environ.copy()
+    env["PYTHON"] = sys.executable
+    subprocess.check_call([julia, os.path.join(script_dir, "install_metal.jl")], env=env)
+
+def install_oneapi():
+    julia = _find_julia()
+    if not julia:
+        raise RuntimeError(
+            "Julia must be installed before adding oneAPI. Please run `diffeqpy.install()` first"
+        )
+    env = os.environ.copy()
+    env["PYTHON"] = sys.executable
+    subprocess.check_call([julia, os.path.join(script_dir, "install_oneapi.jl")], env=env)
 
 def _ensure_installed(*kwargs):
     if not _find_julia():
