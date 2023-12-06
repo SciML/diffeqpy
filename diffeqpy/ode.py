@@ -1,3 +1,4 @@
 import sys
 from . import load_julia_packages
-sys.modules[__name__] = load_julia_packages("OrdinaryDiffEq") # mutate myself
+ode, _  = load_julia_packages("OrdinaryDiffEq", "PythonCall")
+sys.modules[__name__] = ode # mutate myself
