@@ -31,14 +31,6 @@ To install diffeqpy, use pip:
 pip install diffeqpy
 ```
 
-To install Julia packages required (and Julia if needed) for diffeqpy, open up Python
-interpreter then run:
-
-```pycon
->>> import diffeqpy
->>> diffeqpy.install()
-```
-
 and you're good!
 
 ## Collab Notebook Examples
@@ -171,7 +163,7 @@ sol = de.solve(prob)
 #### Limitations
 
 `de.jit`, uses ModelingToolkit.jl's `modelingtoolkitize` internally and some
-restrictions apply. Not all models can be jitted. See the 
+restrictions apply. Not all models can be jitted. See the
 [`modelingtoolkitize` documentation](https://docs.sciml.ai/ModelingToolkit/stable/tutorials/modelingtoolkitize/#What-is-modelingtoolkitize?)
 for more info.
 
@@ -552,29 +544,19 @@ sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleSerial(),trajectories=10000,sa
 ```
 
 To add GPUs to the mix, we need to bring in [DiffEqGPU](https://github.com/SciML/DiffEqGPU.jl).
-The `diffeqpy.install_cuda()` will install CUDA for you and bring all of the bindings into the returned object:
+The command `from diffeqpy import cuda` will install CUDA for you and bring all of the bindings into the returned object:
 
-```py
-diffeqpy.install_cuda()
-```
-
-then run the cuda import:
-
-```py
-from diffeqpy import cuda
-```
-
-#### Note: `diffeqpy.install_cuda()` and `from diffeqpy import cuda` can take awhile to run the first time as it installs the drivers!
+#### Note: `from diffeqpy import cuda` can take awhile to run the first time as it installs the drivers!
 
 Now we simply use `EnsembleGPUKernel(cuda.CUDABackend())` with a
-GPU-specialized ODE solver `cuda.GPUTsit5()` to solve 10,000 ODEs on the GPU in 
+GPU-specialized ODE solver `cuda.GPUTsit5()` to solve 10,000 ODEs on the GPU in
 parallel:
 
 ```py
 sol = de.solve(ensembleprob,cuda.GPUTsit5(),cuda.EnsembleGPUKernel(cuda.CUDABackend()),trajectories=10000,saveat=0.01)
 ```
 
-For the full list of choices for specialized GPU solvers, see 
+For the full list of choices for specialized GPU solvers, see
 [the DiffEqGPU.jl documentation](https://docs.sciml.ai/DiffEqGPU/stable/manual/ensemblegpukernel/).
 
 Note that `EnsembleGPUArray` can be used as well, like:
@@ -598,20 +580,20 @@ ensemble generation:
 ```py
 import numpy as np
 from scipy.integrate import odeint
- 
+
 def lorenz(state, t, sigma, beta, rho):
     x, y, z = state
-     
+
     dx = sigma * (y - x)
     dy = x * (rho - z) - y
     dz = x * y - beta * z
-     
+
     return [dx, dy, dz]
 
 sigma = 10.0
 beta = 8.0 / 3.0
-rho = 28.0 
-p = (sigma, beta, rho)	
+rho = 28.0
+p = (sigma, beta, rho)
 y0 = [1.0, 1.0, 1.0]
 
 t = np.arange(0.0, 100.0, 0.01)
