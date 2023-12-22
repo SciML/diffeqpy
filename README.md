@@ -20,7 +20,7 @@ including:
 
 directly in Python.
 
-For any  abhi questions or discussions, please feel free to join the conversation in the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge). For bug reports, feature requests, etc., please submit an issue.
+For any questions or discussions, please feel free to join the conversation in the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge). For bug reports, feature requests, etc., please submit an issue.
 
 ## Installation
 
