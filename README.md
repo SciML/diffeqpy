@@ -534,7 +534,7 @@ def prob_func(prob,i,rep):
   return de.remake(prob,u0=[random.uniform(0, 1)*u0[i] for i in range(0,3)],
             p=[random.uniform(0, 1)*p[i] for i in range(0,3)])
 
-ensembleprob = de.EnsembleProblem(fast_prob, safetycopy=False)
+ensembleprob = de.EnsembleProblem(fast_prob, prob_func=prob_func, safetycopy=False)
 ```
 
 Now we solve the ensemble in serial:
