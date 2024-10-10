@@ -12,7 +12,7 @@ def _find_julia():
 def _ensure_julia_installed():
     if not _find_julia():
         print("No Julia version found. Installing Julia.")
-        install_julia()
+        install_julia(version="1.10")
         if not _find_julia():
             raise RuntimeError(
                 "Julia installed with jill but `julia` binary cannot be found in the path"
