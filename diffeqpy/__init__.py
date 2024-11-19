@@ -61,7 +61,7 @@ def install(*, confirm=False):
     julia = _find_julia()
     if not julia:
         print("No Julia version found. Installing Julia.")
-        install_julia(confirm=confirm)
+        install_julia(version="1.10", confirm=confirm)
         julia = _find_julia()
         if not julia:
             raise RuntimeError(
