@@ -6,7 +6,7 @@ de.jit = Main.seval("jit(x) = typeof(x).name.wrapper(ModelingToolkit.complete(Mo
 de.jit32 = Main.seval("""
                       function jit(x)
                           prob = typeof(x).name.wrapper(ModelingToolkit.complete(ModelingToolkit.modelingtoolkitize(x); split = false), [], Float32.(x.tspan))
-                          remake(prob; u0 = Float32.(prob.u0), p = Float32.(prob.p))
+                          ModelingToolkit.remake(prob; u0 = Float32.(prob.u0), p = Float32.(prob.p))
                       end
                       """) # kinda hackey
 sys.modules[__name__] = de # mutate myself
