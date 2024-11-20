@@ -15,19 +15,18 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest
+          - macos-14
           # Disabling Windows tests as it's known to not work:
           # https://github.com/SciML/diffeqpy/pull/86#issuecomment-1011675735
           # - windows-latest
-        architecture: [x64]
-        python-version: ['3.10']
+        python-version: ['3.8', '3.12']
       fail-fast: false
     name: Test ${{ matrix.os }} ${{ matrix.architecture }}
       Python ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Setup python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.architecture }}
@@ -35,6 +34,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install --upgrade tox
+      - name: Install Julia using jill
+        run: |
+          python -m pip install --upgrade jill
+          python -c "from jill.install import install_julia; install_julia(version='1.10', confirm=True)"
       - name: Run test
         run: python -m tox -- --cov=diffeqpy -s
         env:
