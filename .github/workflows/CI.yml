@@ -37,7 +37,7 @@ jobs:
       - name: Install Julia using jill
         run: |
           python -m pip install --upgrade jill
-          python -c "from jill.install import install_julia; install_julia(version='1.10', confirm=True)"
+          python -c "from jill.install import install_julia; install_julia(confirm=True)"
       - name: Run test
         run: python -m tox -- --cov=diffeqpy -s
         env:
