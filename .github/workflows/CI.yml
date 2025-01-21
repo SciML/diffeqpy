@@ -15,11 +15,11 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-14
+          - macos-latest
           # Disabling Windows tests as it's known to not work:
           # https://github.com/SciML/diffeqpy/pull/86#issuecomment-1011675735
           # - windows-latest
-        python-version: ['3.8', '3.12']
+        python-version: ['3.8', '3.13']
       fail-fast: false
     name: Test ${{ matrix.os }} ${{ matrix.architecture }}
       Python ${{ matrix.python-version }}
