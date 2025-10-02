@@ -1,5 +1,13 @@
 import shutil
-from jill.install import install_julia
+
+try:
+    from jill.install import install_julia
+except ModuleNotFoundError:
+    def install_julia():
+        # install_julia() is only called if Julia is not already installed.
+        # Defining this dummy function allows diffeqpy to be used without Jill
+        # if Julia has already been installed.
+        raise RuntimeError("Could not install Julia as the Jill module was not found.")
 
 # juliacall must be loaded after `_ensure_julia_installed()` is run,
 # so this import is in `load_julia_packages()`
