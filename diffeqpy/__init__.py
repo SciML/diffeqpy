@@ -1,5 +1,4 @@
 import shutil
-from jill.install import install_julia
 
 # juliacall must be loaded after `_ensure_julia_installed()` is run,
 # so this import is in `load_julia_packages()`
@@ -12,6 +11,13 @@ def _find_julia():
 def _ensure_julia_installed():
     if not _find_julia():
         print("No Julia version found. Installing Julia.")
+        try:
+            from jill.install import install_julia
+        except ImportError:
+            raise RuntimeError(
+                "Julia is not installed and the 'jill' package is not available. "
+                "Please install Julia manually or install jill: pip install jill"
+            )
         install_julia()
         if not _find_julia():
             raise RuntimeError(
@@ -61,6 +67,13 @@ def install(*, confirm=False):
     julia = _find_julia()
     if not julia:
         print("No Julia version found. Installing Julia.")
+        try:
+            from jill.install import install_julia
+        except ImportError:
+            raise RuntimeError(
+                "Julia is not installed and the 'jill' package is not available. "
+                "Please install Julia manually or install jill: pip install jill"
+            )
         install_julia(confirm=confirm)
         julia = _find_julia()
         if not julia:
