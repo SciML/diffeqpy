@@ -27,7 +27,7 @@ setup(name='diffeqpy',
       author_email='contact@sciml.ai',
       license='MIT',
       packages=['diffeqpy','diffeqpy.tests'],
-      python_requires='>=3.9',
+      python_requires='>=3.10',
       install_requires=['juliacall>=0.9.28', 'jill'],
       include_package_data=True,
       zip_safe=False)
