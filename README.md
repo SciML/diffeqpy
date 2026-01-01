@@ -4,7 +4,7 @@
 [![CI](https://github.com/SciML/diffeqpy/workflows/CI/badge.svg)](https://github.com/SciML/diffeqpy/actions)
 
 diffeqpy is a package for solving differential equations in Python. It utilizes
-[DifferentialEquations.jl](http://diffeq.sciml.ai/dev/) for its core routines
+[DifferentialEquations.jl](https://docs.sciml.ai/DiffEqDocs/stable/) for its core routines
 to give high performance solving of many different types of differential equations,
 including:
 
@@ -33,7 +33,7 @@ pip install diffeqpy
 
 and you're good!
 
-## Collab Notebook Examples
+## Colab Notebook Examples
 
 - [Solving the Lorenz equation faster than SciPy+Numba](https://colab.research.google.com/drive/1SQCu1puMQO01i3oMg0TXfa1uf7BqgsEW?usp=sharing)
 - [Solving ODEs on GPUs Fast in Python with diffeqpy](https://colab.research.google.com/drive/1bnQMdNvg0AL-LyPcXBiH10jBij5QUmtY?usp=sharing)
@@ -45,12 +45,12 @@ Import and setup the solvers available in *DifferentialEquations.jl* via the com
 ```py
 from diffeqpy import de
 ```
-In case only the solvers available in *OrdinaryDiffEq.jl* are required then use the command:
+If only the solvers available in *OrdinaryDiffEq.jl* are required, then use the command:
 ```py
 from diffeqpy import ode
 ```
 The general flow for using the package is to follow exactly as would be done
-in Julia, except add `de.` or `ode.` in front. Note that `ode.` has lesser loading time and a smaller memory footprint compared to `de.`.
+in Julia, except add `de.` or `ode.` in front. Note that `ode.` has a shorter loading time and a smaller memory footprint compared to `de.`.
 Most of the commands will work without any modification. Thus
 [the DifferentialEquations.jl documentation](https://github.com/SciML/DifferentialEquations.jl)
 and the [DiffEqTutorials](https://github.com/SciML/DiffEqTutorials.jl)
@@ -59,8 +59,8 @@ translate these docs to Python code.
 
 ## Note about !
 
-Python does not allow `!` in function names, so this is also [a limitation of pyjulia](https://pyjulia.readthedocs.io/en/latest/limitations.html#mismatch-in-valid-set-of-identifiers)
-To use functions which on the Julia side have a `!`, like `step!`, replace `!` by `_b`, for example:
+Python does not allow `!` in function names, so this is also [a limitation of pyjulia](https://pyjulia.readthedocs.io/en/latest/limitations.html#mismatch-in-valid-set-of-identifiers).
+To use functions which on the Julia side have a `!`, like `step!`, replace `!` by `_b`. For example:
 
 ```py
 from diffeqpy import de
@@ -75,7 +75,7 @@ integrator = de.init(prob, de.Tsit5())
 de.step_b(integrator)
 ```
 
-is valid Python code for using [the integrator interface](https://diffeq.sciml.ai/stable/basics/integrator/).
+is valid Python code for using [the integrator interface](https://docs.sciml.ai/DiffEqDocs/stable/basics/integrator/).
 
 
 ## Ordinary Differential Equation (ODE) Examples
@@ -95,8 +95,8 @@ sol = de.solve(prob)
 ```
 
 The solution object is the same as the one described
-[in the DiffEq tutorials](http://diffeq.sciml.ai/dev/tutorials/ode_example#Step-3:-Analyzing-the-Solution-1)
-and in the [solution handling documentation](http://diffeq.sciml.ai/dev/basics/solution)
+[in the DiffEq tutorials](https://docs.sciml.ai/DiffEqDocs/stable/tutorials/ode_example/#Step-3:-Analyzing-the-Solution)
+and in the [solution handling documentation](https://docs.sciml.ai/DiffEqDocs/stable/basics/solution/)
 (note: the array interface is missing). Thus for example the solution time points
 are saved in `sol.t` and the solution values are saved in `sol.u`. Additionally,
 the interpolation `sol(t)` gives a continuous solution.
@@ -125,7 +125,7 @@ plt.show()
 
 ### Solve commands
 
-The [common interface arguments](http://diffeq.sciml.ai/dev/basics/common_solver_opts)
+The [common interface arguments](https://docs.sciml.ai/DiffEqDocs/stable/basics/common_solver_opts/)
 can be used to control the solve command. For example, let's use `saveat` to
 save the solution at every `t=0.1`, and let's utilize the `Vern9()` 9th order
 Runge-Kutta method along with low tolerances `abstol=reltol=1e-10`:
@@ -135,7 +135,7 @@ sol = de.solve(prob,de.Vern9(),saveat=0.1,abstol=1e-10,reltol=1e-10)
 ```
 
 The set of algorithms for ODEs is described
-[at the ODE solvers page](http://diffeq.sciml.ai/dev/solvers/ode_solve).
+[at the ODE solvers page](https://docs.sciml.ai/DiffEqDocs/stable/solvers/ode_solve/).
 
 ### Compilation with `de.jit` and Julia
 
@@ -250,7 +250,7 @@ sol = de.solve(prob)
 
 Solving one-dimensonal SDEs `du = f(u,t)dt + g(u,t)dW_t` is like an ODE except
 with an extra function for the diffusion (randomness or noise) term. The steps
-follow the [SDE tutorial](http://diffeq.sciml.ai/dev/tutorials/sde_example).
+follow the [SDE tutorial](https://docs.sciml.ai/DiffEqDocs/stable/tutorials/sde_example/).
 
 ```py
 def f(u,p,t):
@@ -311,7 +311,7 @@ plt.show()
 
 In many cases you may want to share noise terms across the system. This is
 known as non-diagonal noise. The
-[DifferentialEquations.jl SDE Tutorial](http://diffeq.sciml.ai/dev/tutorials/sde_example#Example-4:-Systems-of-SDEs-with-Non-Diagonal-Noise-1)
+[DifferentialEquations.jl SDE Tutorial](https://docs.sciml.ai/DiffEqDocs/stable/tutorials/sde_example/#Example-4:-Systems-of-SDEs-with-Non-Diagonal-Noise)
 explains how the matrix form of the diffusion term corresponds to the
 summation style of multiple Wiener processes. Essentially, the row corresponds
 to which system the term is applied to, and the column is which noise term.
@@ -388,7 +388,7 @@ sol = de.solve(prob)
 
 ![f8](https://user-images.githubusercontent.com/1814174/39089392-e932f012-457a-11e8-9979-c006bcfabf71.png)
 
-and the in-place JIT compiled form:
+and the in-place form:
 
 ```py
 def f(resid,du,u,p,t):
@@ -397,9 +397,10 @@ def f(resid,du,u,p,t):
   resid[2] = u[0] + u[1] + u[2] - 1.0
 
 prob = de.DAEProblem(f,du0,u0,tspan,differential_vars=differential_vars)
-jit_prob = de.jit(prob) # Error: no method matching matching modelingtoolkitize(::SciMLBase.DAEProblem{...})
-sol = de.solve(jit_prob)
+sol = de.solve(prob)
 ```
+
+Note: `de.jit()` is not currently supported for DAE problems.
 
 ## Mass Matrices, Sparse Arrays, and More
 
@@ -762,7 +763,7 @@ For more information, see [the DiffEqGPU.jl documentation](https://docs.sciml.ai
 
 ## Testing
 
-Unit tests can be run by [`tox`](http://tox.readthedocs.io).
+Unit tests can be run by [`tox`](https://tox.readthedocs.io).
 
 ```sh
 tox
