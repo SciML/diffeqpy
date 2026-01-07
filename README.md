@@ -57,6 +57,38 @@ and the [DiffEqTutorials](https://github.com/SciML/DiffEqTutorials.jl)
 are the main in-depth documentation for this package. Below we will show how to
 translate these docs to Python code.
 
+## Startup Time and Warmup
+
+The first time you import `diffeqpy`, Julia needs to load and compile packages, which
+can take some time (typically 10-30 seconds). Additionally, the first solve incurs
+JIT compilation overhead (typically 5-10 seconds).
+
+If you want to trigger this compilation upfront (e.g., at application startup),
+you can use the warmup functions:
+
+```py
+from diffeqpy import ode
+from diffeqpy.warmup import warmup_ode
+
+# Trigger JIT compilation upfront
+warmup_ode()
+
+# Now subsequent solves will be fast
+def f(u, p, t):
+    return -u
+
+prob = ode.ODEProblem(f, 0.5, (0.0, 1.0))
+sol = ode.solve(prob)  # This will be fast
+```
+
+For the full DifferentialEquations suite:
+```py
+from diffeqpy import de
+from diffeqpy.warmup import warmup_de
+
+warmup_de()
+```
+
 ## Note about !
 
 Python does not allow `!` in function names, so this is also [a limitation of pyjulia](https://pyjulia.readthedocs.io/en/latest/limitations.html#mismatch-in-valid-set-of-identifiers).
