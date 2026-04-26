@@ -431,7 +431,7 @@ sol = de.solve(prob_mm, de.Rodas5P(), reltol = 1e-8, abstol = 1e-8)
 
 Notice the only addition is to create the `np.array` object and to perform the manual conversion via `jl.convert(jl.Array,M)` to receive the
 Julia `Array` object. This can be done in any case where diffeqpy is not adequately auto-converting to the right Julia type. In some cases this
-can be used to improve performance, though here we do it simply for compatability.
+can be used to improve performance, though here we do it simply for compatibility.
 
 Similarly, sparse matrices can be passed in much the same way. For example:
 
