@@ -20,8 +20,8 @@ including:
 
 directly in Python.
 
-If you have any questions, or just want to chat about solvers/using the package,
-please feel free to chat in the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge). For bug reports, feature requests, etc., please submit an issue.
+If you have any questions, or just want to chat about solvers or using the package,
+please feel free to join the community discussion in the [Gitter channel](https://gitter.im/JuliaDiffEq/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge). For bug reports, feature requests, etc., please submit a GitHub issue.
 
 ## Installation
 
