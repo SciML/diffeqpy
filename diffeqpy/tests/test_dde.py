@@ -17,4 +17,4 @@ def test():
     tspan = (0.0, 100.0)
     constant_lags = [20.0]
     prob = de.DDEProblem(f,u0,h,tspan,constant_lags=constant_lags)
-    sol = de.solve(prob,saveat=0.1)
+    sol = de.solve(prob,de.MethodOfSteps(de.Tsit5()),saveat=0.1)
