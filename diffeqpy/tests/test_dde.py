@@ -17,9 +17,4 @@ def test():
     tspan = (0.0, 100.0)
     constant_lags = [20.0]
     prob = de.DDEProblem(f,u0,h,tspan,constant_lags=constant_lags)
-    # Pass an explicit algorithm rather than relying on the default selector.
-    # The `MethodOfSteps(DefaultODEAlgorithm())` path currently hits a
-    # `Cannot convert Rosenbrock23Cache{...}` MethodError from a ForwardDiff
-    # Tag asymmetry between DDE and ODE default-alg selection in
-    # SciML/OrdinaryDiffEq.jl — see diffeqpy #172 for the upstream tracking.
     sol = de.solve(prob,de.MethodOfSteps(de.Tsit5()),saveat=0.1)
