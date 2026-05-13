@@ -9,6 +9,10 @@
             "uuid": "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed",
             "version": "6, 7"
         },
+        "OrdinaryDiffEqDefault": {
+            "uuid": "50262376-6c5a-4cf5-baba-aaf4f84d72d7",
+            "version": "1, 2"
+        },
         "StochasticDiffEq": {
             "uuid": "789caeaf-c7a9-5a7d-9973-96adeb23e2a0",
             "version": "6, 7"
