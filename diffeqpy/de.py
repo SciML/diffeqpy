@@ -1,6 +1,20 @@
 import sys
 from . import load_julia_packages
-de, _, _ = load_julia_packages("DifferentialEquations", "ModelingToolkit", "PythonCall")
+# `DifferentialEquations.jl` v8 only re-exports SciMLBase + OrdinaryDiffEq, so the
+# SDE/DDE/DAE/callback sub-solver packages have to be loaded explicitly here for
+# their __init__ hooks to register the default algorithms used by `de.solve(prob)`.
+# OrdinaryDiffEqDefault is pulled in transitively by OrdinaryDiffEq and now also
+# supplies the default DAEProblem solver.
+loaded = load_julia_packages(
+    "DifferentialEquations",
+    "StochasticDiffEq",
+    "DelayDiffEq",
+    "Sundials",
+    "DiffEqCallbacks",
+    "ModelingToolkit",
+    "PythonCall",
+)
+de = loaded[0]
 from juliacall import Main
 de.seval("jit(x) = typeof(x).name.wrapper(Main.ModelingToolkit.complete(Main.ModelingToolkit.modelingtoolkitize(x); split = false), [], x.tspan)") # kinda hackey
 de.seval("""
