@@ -2,3 +2,4 @@ include README.md
 include LICENSE.md
 include docs/*.txt
 include diffeqpy/*.jl
+include diffeqpy/*.json

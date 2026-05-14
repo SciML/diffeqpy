@@ -29,12 +29,19 @@ def load_julia_packages(*names):
     """
     Load Julia packages and return references to them, automatically installing julia and
     the packages as necessary.
+
+    Packages declared in ``diffeqpy/juliapkg.json`` (the documented solver stack:
+    DifferentialEquations, OrdinaryDiffEq, StochasticDiffEq, DelayDiffEq, Sundials,
+    DiffEqCallbacks, ModelingToolkit) are installed by juliacall at import time into
+    its managed project alongside the ABI-matched PythonCall, so they should already
+    be importable here. Anything not listed there (e.g. the optional GPU backends
+    pulled in by ``diffeqpy.cuda`` / ``amdgpu`` / ``metal`` / ``oneapi``) is added
+    lazily on first use into the same managed project.
     """
     # This is terrifying to many people. However, it seems SciML takes pragmatic approach.
     _ensure_julia_installed()
 
     script = """import Pkg
-    Pkg.activate(\"diffeqpy\", shared=true)
     try
         import {0}
     catch e

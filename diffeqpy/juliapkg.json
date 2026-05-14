@@ -1,0 +1,37 @@
+{
+    "julia": "1.10",
+    "packages": {
+        "DifferentialEquations": {
+            "uuid": "0c46a032-eb83-5123-abaf-570d42b7fbaa",
+            "version": "7, 8"
+        },
+        "OrdinaryDiffEq": {
+            "uuid": "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed",
+            "version": "6, 7"
+        },
+        "OrdinaryDiffEqDefault": {
+            "uuid": "50262376-6c5a-4cf5-baba-aaf4f84d72d7",
+            "version": "1, 2"
+        },
+        "StochasticDiffEq": {
+            "uuid": "789caeaf-c7a9-5a7d-9973-96adeb23e2a0",
+            "version": "6, 7"
+        },
+        "DelayDiffEq": {
+            "uuid": "bcd4f6db-9728-5f36-b5f7-82caef46ccdb",
+            "version": "5, 6"
+        },
+        "Sundials": {
+            "uuid": "c3572dad-4567-51f8-b174-8c6c989267f4",
+            "version": "4, 5, 6"
+        },
+        "DiffEqCallbacks": {
+            "uuid": "459566f4-90b8-5000-8ac3-15dfb0a30def",
+            "version": "3, 4"
+        },
+        "ModelingToolkit": {
+            "uuid": "961ee093-0014-501f-94e3-6117800e7a78",
+            "version": "9, 10, 11"
+        }
+    }
+}
