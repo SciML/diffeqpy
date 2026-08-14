@@ -40,15 +40,18 @@ and you're good!
 
 ## General Flow
 
-Import and setup the solvers available in *DifferentialEquations.jl* via the command:
+Import and setup the solvers available in _DifferentialEquations.jl_ via the command:
 
 ```py
 from diffeqpy import de
 ```
-If only the solvers available in *OrdinaryDiffEq.jl* are required, then use the command:
+
+If only the solvers available in _OrdinaryDiffEq.jl_ are required, then use the command:
+
 ```py
 from diffeqpy import ode
 ```
+
 The general flow for using the package is to follow exactly as would be done
 in Julia, except add `de.` or `ode.` in front. Note that `ode.` has a shorter loading time and a smaller memory footprint compared to `de.`.
 Most of the commands will work without any modification. Thus
@@ -76,7 +79,6 @@ de.step_b(integrator)
 ```
 
 is valid Python code for using [the integrator interface](https://docs.sciml.ai/DiffEqDocs/stable/basics/integrator/).
-
 
 ## Ordinary Differential Equation (ODE) Examples
 
@@ -525,13 +527,13 @@ Note that here we used `de.jit32` to JIT-compile the problem into a `Float32` fo
 efficient on most GPUs.
 
 Now we use the `EnsembleProblem` as defined on the
-[ensemble parallelism page of the documentation](https://diffeq.sciml.ai/stable/features/ensemble/):
+[ensemble parallelism page of the documentation](https://docs.sciml.ai/DiffEqDocs/stable/features/ensemble/):
 Let's build an ensemble by utilizing uniform random numbers to randomize the
 initial conditions and parameters:
 
 ```py
 import random
-def prob_func(prob,i,rep):
+def prob_func(prob,ctx):
   return de.remake(prob,u0=[random.uniform(0, 1)*u0[i] for i in range(0,3)],
             p=[random.uniform(0, 1)*p[i] for i in range(0,3)])
 
@@ -678,7 +680,7 @@ u0 = SA[1.0f0; 0.0f0; 0.0f0]
 tspan = (0.0f0, 10.0f0)
 p = SA[10.0f0, 28.0f0, 8 / 3.0f0]
 prob = ODEProblem{false}(lorenz, u0, tspan, p)
-prob_func = (prob, i, repeat) -> remake(prob, p = (@SVector rand(Float32, 3)) .* p)
+prob_func = (prob, ctx) -> remake(prob, p = (@SVector rand(Float32, 3)) .* p)
 monteprob = EnsembleProblem(prob, prob_func = prob_func, safetycopy = false)
 @time sol = solve(monteprob, GPUTsit5(), EnsembleGPUKernel(CUDA.CUDABackend()),
     trajectories = 10_000,
@@ -773,8 +775,8 @@ tox
 
 In case you encounter silent failure from `tox`, try running it with
 `-- -s` (e.g., `tox -e py36 -- -s`) where `-s` option (`--capture=no`,
-i.e., don't capture stdio) is passed to `py.test`.  It may show an
-error message `"error initializing LibGit2 module"`.  In this case,
+i.e., don't capture stdio) is passed to `py.test`. It may show an
+error message `"error initializing LibGit2 module"`. In this case,
 setting environment variable `SSL_CERT_FILE` may help; e.g., try:
 
 ```sh
