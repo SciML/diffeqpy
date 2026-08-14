@@ -495,7 +495,7 @@ Notice that the solver accurately is able to simulate the kink (discontinuity)
 at `t=20` due to the discontinuity of the derivative at the initial time point!
 This is why declaring discontinuities can enhance the solver accuracy.
 
-## GPU-Accelerated ODE Solving of Ensembles
+## ODE Solving of Ensembles
 
 In many cases one is interested in solving the same ODE many times over many
 different initial conditions and parameters. In diffeqpy parlance this is called
@@ -540,11 +540,49 @@ def prob_func(prob,ctx):
 ensembleprob = de.EnsembleProblem(fast_prob, prob_func=prob_func, safetycopy=False)
 ```
 
+`ctx` is an object with several attributes:
+
+- `ctx.sim_id`, the unique id of the trajectory (**starts at 1**)
+- `ctx.repeat`, the rerun counter (**starts at 1**)
+  Other available fields include `ctx.rng` (per-trajectory RNG or nothing), `ctx.sim_seed`, and `ctx.master_rng`.
+
+You can also define a function to format the solution, `output_func(sol, ctx): (sol, rep)`, it has to return the edited solutions and a boolean telling if the trajectory should be repeated or not.
+
 Now we solve the ensemble in serial:
 
 ```py
 sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleSerial(),trajectories=10000,saveat=0.01)
 ```
+
+### CPU-Asynchronous ODE Solving of Ensembles
+
+To solve using several cores in parallel, we need first to define the number of cores that can be used by Julia, **before starting Julia**, i.e. before importing `diffeqpy`.
+
+```py
+import os
+os.environ.setdefault("JULIA_NUM_THREADS", "4")  # change to any value that fits you
+from diffeqpy import de, cuda  # must be imported after
+```
+
+Now we solve the ensemble in parallel:
+
+```py
+sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleThreads(),trajectories=10000,saveat=0.01)
+```
+
+or
+
+```py
+sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleDistributed(),trajectories=10000,saveat=0.01)
+```
+
+or
+
+```py
+sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleSplitThreads(),trajectories=10000,saveat=0.01)
+```
+
+### GPU-Accelerated ODE Solving of Ensembles
 
 To add GPUs to the mix, we need to bring in [DiffEqGPU](https://github.com/SciML/DiffEqGPU.jl).
 The command `from diffeqpy import cuda` will install CUDA for you and bring all of the bindings into the returned object:
