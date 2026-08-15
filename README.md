@@ -40,15 +40,18 @@ and you're good!
 
 ## General Flow
 
-Import and setup the solvers available in *DifferentialEquations.jl* via the command:
+Import and setup the solvers available in _DifferentialEquations.jl_ via the command:
 
 ```py
 from diffeqpy import de
 ```
-If only the solvers available in *OrdinaryDiffEq.jl* are required, then use the command:
+
+If only the solvers available in _OrdinaryDiffEq.jl_ are required, then use the command:
+
 ```py
 from diffeqpy import ode
 ```
+
 The general flow for using the package is to follow exactly as would be done
 in Julia, except add `de.` or `ode.` in front. Note that `ode.` has a shorter loading time and a smaller memory footprint compared to `de.`.
 Most of the commands will work without any modification. Thus
@@ -76,7 +79,6 @@ de.step_b(integrator)
 ```
 
 is valid Python code for using [the integrator interface](https://docs.sciml.ai/DiffEqDocs/stable/basics/integrator/).
-
 
 ## Ordinary Differential Equation (ODE) Examples
 
@@ -493,7 +495,7 @@ Notice that the solver accurately is able to simulate the kink (discontinuity)
 at `t=20` due to the discontinuity of the derivative at the initial time point!
 This is why declaring discontinuities can enhance the solver accuracy.
 
-## GPU-Accelerated ODE Solving of Ensembles
+## ODE Solving of Ensembles
 
 In many cases one is interested in solving the same ODE many times over many
 different initial conditions and parameters. In diffeqpy parlance this is called
@@ -525,24 +527,62 @@ Note that here we used `de.jit32` to JIT-compile the problem into a `Float32` fo
 efficient on most GPUs.
 
 Now we use the `EnsembleProblem` as defined on the
-[ensemble parallelism page of the documentation](https://diffeq.sciml.ai/stable/features/ensemble/):
+[ensemble parallelism page of the documentation](https://docs.sciml.ai/DiffEqDocs/stable/features/ensemble/):
 Let's build an ensemble by utilizing uniform random numbers to randomize the
 initial conditions and parameters:
 
 ```py
 import random
-def prob_func(prob,i,rep):
+def prob_func(prob,ctx):
   return de.remake(prob,u0=[random.uniform(0, 1)*u0[i] for i in range(0,3)],
             p=[random.uniform(0, 1)*p[i] for i in range(0,3)])
 
 ensembleprob = de.EnsembleProblem(fast_prob, prob_func=prob_func, safetycopy=False)
 ```
 
+`ctx` is an object with several attributes:
+
+- `ctx.sim_id`, the unique id of the trajectory (**starts at 1**)
+- `ctx.repeat`, the rerun counter (**starts at 1**)
+  Other available fields include `ctx.rng` (per-trajectory RNG or nothing), `ctx.sim_seed`, and `ctx.master_rng`.
+
+You can also define a function to format the solution, `output_func(sol, ctx): (sol, rep)`, it has to return the edited solutions and a boolean telling if the trajectory should be repeated or not.
+
 Now we solve the ensemble in serial:
 
 ```py
 sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleSerial(),trajectories=10000,saveat=0.01)
 ```
+
+### CPU-Asynchronous ODE Solving of Ensembles
+
+To solve using several cores in parallel, we need first to define the number of cores that can be used by Julia, **before starting Julia**, i.e. before importing `diffeqpy`.
+
+```py
+import os
+os.environ.setdefault("JULIA_NUM_THREADS", "4")  # change to any value that fits you
+from diffeqpy import de, cuda  # must be imported after
+```
+
+Now we solve the ensemble in parallel:
+
+```py
+sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleThreads(),trajectories=10000,saveat=0.01)
+```
+
+or
+
+```py
+sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleDistributed(),trajectories=10000,saveat=0.01)
+```
+
+or
+
+```py
+sol = de.solve(ensembleprob,de.Tsit5(),de.EnsembleSplitThreads(),trajectories=10000,saveat=0.01)
+```
+
+### GPU-Accelerated ODE Solving of Ensembles
 
 To add GPUs to the mix, we need to bring in [DiffEqGPU](https://github.com/SciML/DiffEqGPU.jl).
 The command `from diffeqpy import cuda` will install CUDA for you and bring all of the bindings into the returned object:
@@ -678,7 +718,7 @@ u0 = SA[1.0f0; 0.0f0; 0.0f0]
 tspan = (0.0f0, 10.0f0)
 p = SA[10.0f0, 28.0f0, 8 / 3.0f0]
 prob = ODEProblem{false}(lorenz, u0, tspan, p)
-prob_func = (prob, i, repeat) -> remake(prob, p = (@SVector rand(Float32, 3)) .* p)
+prob_func = (prob, ctx) -> remake(prob, p = (@SVector rand(Float32, 3)) .* p)
 monteprob = EnsembleProblem(prob, prob_func = prob_func, safetycopy = false)
 @time sol = solve(monteprob, GPUTsit5(), EnsembleGPUKernel(CUDA.CUDABackend()),
     trajectories = 10_000,
@@ -773,8 +813,8 @@ tox
 
 In case you encounter silent failure from `tox`, try running it with
 `-- -s` (e.g., `tox -e py36 -- -s`) where `-s` option (`--capture=no`,
-i.e., don't capture stdio) is passed to `py.test`.  It may show an
-error message `"error initializing LibGit2 module"`.  In this case,
+i.e., don't capture stdio) is passed to `py.test`. It may show an
+error message `"error initializing LibGit2 module"`. In this case,
 setting environment variable `SSL_CERT_FILE` may help; e.g., try:
 
 ```sh
