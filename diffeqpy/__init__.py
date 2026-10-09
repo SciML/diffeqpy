@@ -1,4 +1,7 @@
+import os
 import shutil
+
+script_dir = os.path.dirname(os.path.realpath(__file__))
 
 # juliacall must be loaded after `_ensure_julia_installed()` is run,
 # so this import is in `load_julia_packages()`
@@ -31,8 +34,9 @@ def load_julia_packages(*names):
     the packages as necessary.
 
     Packages declared in ``diffeqpy/juliapkg.json`` (the documented solver stack:
-    DifferentialEquations, OrdinaryDiffEq, StochasticDiffEq, DelayDiffEq, Sundials,
-    DiffEqCallbacks, ModelingToolkit) are installed by juliacall at import time into
+    DifferentialEquations, OrdinaryDiffEq and its solver sublibraries,
+    StochasticDiffEq, DelayDiffEq, Sundials, DiffEqCallbacks, ModelingToolkit)
+    are installed by juliacall at import time into
     its managed project alongside the ABI-matched PythonCall, so they should already
     be importable here. Anything not listed there (e.g. the optional GPU backends
     pulled in by ``diffeqpy.cuda`` / ``amdgpu`` / ``metal`` / ``oneapi``) is added
@@ -72,12 +76,9 @@ def _ode_solver_packages():
     return tuple(p for p in _declared_julia_packages() if p.startswith("OrdinaryDiffEq"))
 
 
-
 # Deprecated (julia and packages now auto-install)
-import os
 import subprocess
 import sys
-script_dir = os.path.dirname(os.path.realpath(__file__))
 
 def install(*, confirm=False):
     """

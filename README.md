@@ -31,7 +31,9 @@ To install diffeqpy, use pip:
 pip install diffeqpy
 ```
 
-and you're good!
+and you're good! The first `from diffeqpy import de` (or `ode`) after installing
+downloads and precompiles the full Julia solver stack, which can take a while;
+later imports reuse the cache.
 
 ## Colab Notebook Examples
 

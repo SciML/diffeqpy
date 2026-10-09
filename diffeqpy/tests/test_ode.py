@@ -13,6 +13,11 @@ def test_ode_sublibrary_solvers():
         sol = de.solve(prob, alg())
         assert abs(sol.u[-1] - 0.5 * 2.718281828459045**-1) < 1e-3
 
+    sol = de.solve(prob, de.KenCarp4(nlsolve=de.NLNewton()))
+    assert abs(sol.u[-1] - 0.5 * 2.718281828459045**-1) < 1e-3
+    sol = de.solve(prob, de.Tsit5(), controller=de.PIController(0.5, 0.4))
+    assert abs(sol.u[-1] - 0.5 * 2.718281828459045**-1) < 1e-3
+
 
 def test_ode_sol():
     numba = pytest.importorskip('numba')

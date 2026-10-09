@@ -11,9 +11,16 @@ from . import load_julia_packages, _declared_julia_packages
 solver_packages = _declared_julia_packages()
 load_julia_packages(*solver_packages)
 from juliacall import Main
+# The controllers, composite/auto-switching algorithms, and NL* nonlinear
+# solvers are public-but-not-exported under OrdinaryDiffEq v7, so `using` alone
+# does not bind them. These explicit imports bind the same objects v6 exports.
 de = Main.seval(
     "module _diffeqpy_de; using "
     + ", ".join(solver_packages)
+    + "; using OrdinaryDiffEq.OrdinaryDiffEqCore: CompositeAlgorithm, AutoSwitch, "
+    "IController, PIController, PIDController"
+    + "; using OrdinaryDiffEqNonlinearSolve: NLNewton, NLAnderson, "
+    "NLFunctional, NonlinearSolveAlg"
     + "; end; _diffeqpy_de"
 )
 de.seval("jit(x) = typeof(x).name.wrapper(ModelingToolkit.complete(ModelingToolkit.modelingtoolkitize(x); split = false), [], x.tspan)") # kinda hackey
