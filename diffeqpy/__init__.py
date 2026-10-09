@@ -60,6 +60,18 @@ def load_julia_packages(*names):
     return Main.seval(script)
 
 
+def _declared_julia_packages():
+    """Names of the Julia packages declared in ``diffeqpy/juliapkg.json``."""
+    import json
+    with open(os.path.join(script_dir, "juliapkg.json")) as f:
+        return tuple(json.load(f)["packages"])
+
+
+def _ode_solver_packages():
+    """OrdinaryDiffEq.jl and its solver sublibraries declared in ``diffeqpy/juliapkg.json``."""
+    return tuple(p for p in _declared_julia_packages() if p.startswith("OrdinaryDiffEq"))
+
+
 
 # Deprecated (julia and packages now auto-install)
 import os

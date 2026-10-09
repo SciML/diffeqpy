@@ -2,6 +2,18 @@ from diffeqpy import ode
 import pytest
 
 
+def test_ode_sublibrary_solvers():
+    def f(u,p,t):
+        return -u
+
+    u0 = 0.5
+    tspan = (0., 1.)
+    prob = ode.ODEProblem(f, u0, tspan)
+    for alg in (ode.RadauIIA5, ode.KenCarp4, ode.Rodas5, ode.Vern7):
+        sol = ode.solve(prob, alg())
+        assert abs(sol.u[-1] - 0.5 * 2.718281828459045**-1) < 1e-3
+
+
 def test_ode_sol_ordinarydiffeq():
     numba = pytest.importorskip('numba')
 
