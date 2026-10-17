@@ -2,6 +2,23 @@ from .. import de
 import pytest
 
 
+def test_ode_sublibrary_solvers():
+    def f(u,p,t):
+        return -u
+
+    u0 = 0.5
+    tspan = (0., 1.)
+    prob = de.ODEProblem(f, u0, tspan)
+    for alg in (de.RadauIIA5, de.KenCarp4, de.Rodas5, de.Vern7):
+        sol = de.solve(prob, alg())
+        assert abs(sol.u[-1] - 0.5 * 2.718281828459045**-1) < 1e-3
+
+    sol = de.solve(prob, de.KenCarp4(nlsolve=de.NLNewton()))
+    assert abs(sol.u[-1] - 0.5 * 2.718281828459045**-1) < 1e-3
+    sol = de.solve(prob, de.Tsit5(), controller=de.PIController(0.5, 0.4))
+    assert abs(sol.u[-1] - 0.5 * 2.718281828459045**-1) < 1e-3
+
+
 def test_ode_sol():
     numba = pytest.importorskip('numba')
 

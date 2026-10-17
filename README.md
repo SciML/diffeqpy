@@ -31,7 +31,9 @@ To install diffeqpy, use pip:
 pip install diffeqpy
 ```
 
-and you're good!
+and you're good! The first `from diffeqpy import de` (or `ode`) after installing
+downloads and precompiles the full Julia solver stack, which can take a while;
+later imports reuse the cache.
 
 ## Colab Notebook Examples
 
@@ -50,6 +52,23 @@ If only the solvers available in _OrdinaryDiffEq.jl_ are required, then use the 
 
 ```py
 from diffeqpy import ode
+```
+
+`de` provides the solvers from OrdinaryDiffEq.jl (including all of its solver
+sublibraries), StochasticDiffEq.jl, DelayDiffEq.jl, Sundials.jl,
+DiffEqCallbacks.jl, and ModelingToolkit.jl, while `ode` provides the
+OrdinaryDiffEq.jl solvers only. Both `de` and `ode` expose the full ODE solver
+set, e.g. `de.RadauIIA5()`, `de.KenCarp4()`, `ode.Rodas5()`, and `ode.Vern7()`.
+
+To use an additional Julia package that is not part of this default set, load
+it explicitly with `load_julia_packages` and qualify its members with the
+returned module object:
+
+```py
+from diffeqpy import de, load_julia_packages
+
+lsoda = load_julia_packages("LSODA")
+sol = de.solve(prob, lsoda.lsoda())
 ```
 
 The general flow for using the package is to follow exactly as would be done

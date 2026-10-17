@@ -1,5 +1,23 @@
 import sys
-from . import load_julia_packages
-# Match the OrdinaryDiffEq pair declared in diffeqpy/juliapkg.json.
-ode, _ = load_julia_packages("OrdinaryDiffEq", "OrdinaryDiffEqDefault")
+from . import load_julia_packages, _ode_solver_packages
+# Match the OrdinaryDiffEq sublibrary set declared in diffeqpy/juliapkg.json.
+# OrdinaryDiffEq v7 only exports the default solvers (Tsit5, the Verns,
+# Rosenbrock23, Rodas5P, FBDF); every other algorithm lives in a solver
+# sublibrary. Build a merged module that `using`s each of them so `ode.<name>`
+# resolves for the full solver set, as it did with OrdinaryDiffEq v6.
+solver_packages = _ode_solver_packages()
+load_julia_packages(*solver_packages)
+from juliacall import Main
+# The controllers, composite/auto-switching algorithms, and NL* nonlinear
+# solvers are public-but-not-exported under OrdinaryDiffEq v7, so `using` alone
+# does not bind them. These explicit imports bind the same objects v6 exports.
+ode = Main.seval(
+    "module _diffeqpy_ode; using "
+    + ", ".join(solver_packages)
+    + "; using OrdinaryDiffEq.OrdinaryDiffEqCore: CompositeAlgorithm, AutoSwitch, "
+    "IController, PIController, PIDController"
+    + "; using OrdinaryDiffEqNonlinearSolve: NLNewton, NLAnderson, "
+    "NLFunctional, NonlinearSolveAlg"
+    + "; end; _diffeqpy_ode"
+)
 sys.modules[__name__] = ode # mutate myself
